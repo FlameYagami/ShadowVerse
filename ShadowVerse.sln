@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckEditor", "ShadowVerse\DeckEditor.csproj", "{87F92E99-3CD1-463F-B7F7-6597B66673F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wrapper", "Wrapper\Wrapper.csproj", "{96748966-BE90-425F-A8C8-E8708E45B77E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87F92E99-3CD1-463F-B7F7-6597B66673F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F92E99-3CD1-463F-B7F7-6597B66673F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F92E99-3CD1-463F-B7F7-6597B66673F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F92E99-3CD1-463F-B7F7-6597B66673F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96748966-BE90-425F-A8C8-E8708E45B77E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96748966-BE90-425F-A8C8-E8708E45B77E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96748966-BE90-425F-A8C8-E8708E45B77E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96748966-BE90-425F-A8C8-E8708E45B77E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
