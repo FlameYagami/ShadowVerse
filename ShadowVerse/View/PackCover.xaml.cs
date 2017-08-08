@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Forms;
 using Dialog;
 using ShadowVerse.Model;
+using ShadowVerse.Utils;
 using Wrapper.Constant;
 using Wrapper.Utils;
 
@@ -25,7 +26,7 @@ namespace ShadowVerse.View
             Close();
         }
 
-        private void BtnCover_Click(object sender, RoutedEventArgs e)
+        private void BtnBaseCover_Click(object sender, RoutedEventArgs e)
         {
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
@@ -36,46 +37,51 @@ namespace ShadowVerse.View
             var packName = TxtPackName.Text.Trim();
             if (packName.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("请输入卡包名称");
+                BaseDialogUtils.ShowDlg("请输入表格名称");
                 return;
             }
-            var jsonString = FileUtils.GetFileContent(filePath);
-            var nameDic = JsonUtils.GetDictionary(jsonString);
+            // 获取源文件所有的信息
+            var dtSource = new DataSet();
+            var isImport = ExcelHelper.ImportExcelToDataTable(filePath, packName, dtSource);
+            if (!isImport)
+            {
+                BaseDialogUtils.ShowDlg("文件中数据异常");
+                return;
+            }
+            // 确认状态
+            if (!BaseDialogUtils.ShowDlgOkCancel("确认覆写?"))
+                return;
+            var sourceCardEntitys = GetSourceCardEntities(dtSource);
             // 生成覆写的数据库语句集合
-            var insertSqlList = GetNameSqlList(nameDic);
+            var insertSqlList = GetInsertSqlList(sourceCardEntitys);
             // 数据库覆写
             var isExecute = SqliteUtils.Execute(insertSqlList);
             BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
-
-
-            //            // 获取源文件所有的信息
-            //            var dtSource = new DataSet();
-            //            var isImport = ExcelHelper.ImportExcelToDataTable(filePath, packName, dtSource);
-            //            if (!isImport)
-            //            {
-            //                BaseDialogUtils.ShowDlg("文件中数据异常");
-            //                return;
-            //            }
-            //            // 确认状态
-            //            if (!BaseDialogUtils.ShowDlgOkCancel("确认覆写?"))
-            //                return;
-            //            var sourceCardEntitys = GetSourceCardEntities(dtSource);
-            //            // 生成覆写的数据库语句集合
-            //            var insertSqlList = GetInsertSqlList(sourceCardEntitys);
-            //            // 数据库覆写
-            //            var isExecute = SqliteUtils.Execute(insertSqlList);
-            //            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
         }
 
         public static List<string> GetClearSqlList()
         {
             var dataSet = new DataSet();
             SqliteUtils.FillDataToDataSet(SqlUtils.GetQueryAllSql(), dataSet);
+//            var idList = dataSet.Tables[SqliteConst.TableName].Rows.Cast<DataRow>()
+//                .Select(row => row[SqliteConst.ColumnId].ToString())
+//                .Where(id => id.EndsWith("1"))
+//                .ToList();
+//            return idList.Select(id => $"delete from {SqliteConst.TableName} where {SqliteConst.ColumnId}='{id}'").ToList();
             var idList = dataSet.Tables[SqliteConst.TableName].Rows.Cast<DataRow>()
-                .Select(row => row["id"].ToString())
-                .Where(id => id.EndsWith("1"))
+                .Select(row => row[SqliteConst.ColumnId].ToString())
                 .ToList();
-            return idList.Select(id => $"delete from card where id='{id}'").ToList();
+            var sqlList =
+                idList.AsParallel()
+                    .Select(
+                        id =>
+                            $"update {SqliteConst.TableName} set " +
+                            $"{SqliteConst.ColumnCamp}='{id.Substring(3, 1)}'," +
+                            $"{SqliteConst.ColumnRarity}='{id.Substring(4, 1)}'," +
+                            $"{SqliteConst.ColumnType}='{id.Substring(5, 1)}' " +
+                            $"where {SqliteConst.ColumnId}='{id}'")
+                    .ToList();
+            return sqlList;
         }
 
         public static List<string> GetInsertSqlList(IEnumerable<CardModel> cardModels)
@@ -83,18 +89,20 @@ namespace ShadowVerse.View
             return
                 cardModels.Select(
                         model =>
-                                $"insert into card (id,type,camp,cost,atk,life,evo_atk,evo_life,rarity,pack) values ('{model.Id}','{model.Type}','{model.Camp}','{model.Cost}','{model.Atk}','{model.Life}','{model.EvoAtk}','{model.EvoLife}','{model.Rarity}','{model.Pack}')")
+                            $"insert into {SqliteConst.TableName} ({SqliteConst.ColumnId},{SqliteConst.ColumnType},{SqliteConst.ColumnCamp},{SqliteConst.ColumnCost}," +
+                            $"{SqliteConst.ColumnAtk},{SqliteConst.ColumnLife},{SqliteConst.ColumnEvoAtk},{SqliteConst.ColumnEvoLife},{SqliteConst.ColumnRarity},{SqliteConst.ColumnPack}" +
+                            $") values ('" +
+                            $"{model.Id}','{model.TypeCode}','{model.CampCode}','{model.Cost}','{model.Atk}','{model.Life}','{model.EvoAtk}','{model.EvoLife}','{model.RarityCode}','{model.PackCode}')")
                     .ToList();
         }
 
-        public static List<string> GetNameSqlList(Dictionary<string, string> nameDic)
+        public static List<string> GetUpdateSqlList(string column, Dictionary<string, string> nameDic)
         {
-            return nameDic.Select(model => $"update card set name='{model.Value}' where id='{model.Key}'").ToList();
-        }
-
-        public static List<string> GetAbilitySqlList(Dictionary<string, string> nameDic)
-        {
-            return nameDic.Select(model => $"update card set ability='{model.Value}' where id='{model.Key}'").ToList();
+            return
+                nameDic.Select(
+                        model =>
+                                $"update {SqliteConst.TableName} set {column}='{model.Value}' where {SqliteConst.ColumnId}='{model.Key}'")
+                    .ToList();
         }
 
         private void FileOpen_Click(object sender, RoutedEventArgs e)
@@ -111,16 +119,16 @@ namespace ShadowVerse.View
         {
             return dataSet.Tables[0].Rows.Cast<DataRow>().Select(row => new CardModel
             {
-                Id = int.Parse(row["id"].ToString()),
-                Type = row["id"].ToString().Substring(4, 1),
-                Camp = row["id"].ToString().Substring(3, 1),
-                Pack = row["id"].ToString().Substring(0, 3),
-                Cost = row["cost"].ToString(),
-                Atk = row["atk"].ToString(),
-                Life = row["life"].ToString(),
-                EvoAtk = row["evo_atk"].ToString(),
-                EvoLife = row["evo_atk"].ToString(),
-                Rarity = row["rarity"].ToString()
+                Id = int.Parse(row[SqliteConst.ColumnId].ToString()),
+                TypeCode = int.Parse(row[SqliteConst.ColumnId].ToString().Substring(4, 1)),
+                CampCode = int.Parse(row[SqliteConst.ColumnId].ToString().Substring(3, 1)),
+                PackCode = int.Parse(row[SqliteConst.ColumnId].ToString().Substring(0, 3)),
+                Cost = int.Parse(row[SqliteConst.ColumnCost].ToString()),
+                Atk = int.Parse(row[SqliteConst.ColumnAtk].ToString()),
+                Life = int.Parse(row[SqliteConst.ColumnLife].ToString()),
+                EvoAtk = int.Parse(row[SqliteConst.ColumnEvoAtk].ToString()),
+                EvoLife = int.Parse(row[SqliteConst.ColumnEvoLife].ToString()),
+                RarityCode = int.Parse(row[SqliteConst.ColumnRarity].ToString())
             }).ToList();
         }
 
@@ -158,7 +166,7 @@ namespace ShadowVerse.View
                     }
                 else
                     tempAbilityDic.Add(dic.Key, dic.Value);
-            var sqlList = GetAbilitySqlList(tempAbilityDic);
+            var sqlList = GetUpdateSqlList(SqliteConst.ColumnSkill, tempAbilityDic);
             // 数据库覆写
             var isExecute = SqliteUtils.Execute(sqlList);
             BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
@@ -166,6 +174,36 @@ namespace ShadowVerse.View
 
         private void BtnNameCover_Click(object sender, RoutedEventArgs e)
         {
+            var filePath = TxtFilePath.Text.Trim();
+            if (filePath.Equals(""))
+            {
+                BaseDialogUtils.ShowDlg("源文件不存在");
+                return;
+            }
+            var jsonString = FileUtils.GetFileContent(filePath);
+            var cvDic = JsonUtils.GetDictionary(jsonString);
+            // 生成覆写的数据库语句集合
+            var insertSqlList = GetUpdateSqlList(SqliteConst.ColumnName, cvDic);
+            // 数据库覆写
+            var isExecute = SqliteUtils.Execute(insertSqlList);
+            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+        }
+
+        private void BtnCvCover_Click(object sender, RoutedEventArgs e)
+        {
+            var filePath = TxtFilePath.Text.Trim();
+            if (filePath.Equals(""))
+            {
+                BaseDialogUtils.ShowDlg("源文件不存在");
+                return;
+            }
+            var jsonString = FileUtils.GetFileContent(filePath);
+            var cvDic = JsonUtils.GetDictionary(jsonString);
+            // 生成覆写的数据库语句集合
+            var insertSqlList = GetUpdateSqlList(SqliteConst.ColumnCv, cvDic);
+            // 数据库覆写
+            var isExecute = SqliteUtils.Execute(insertSqlList);
+            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
         }
     }
 }

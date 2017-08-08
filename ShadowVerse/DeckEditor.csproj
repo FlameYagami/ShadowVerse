@@ -85,6 +85,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFVisifire.Charts">
+      <HintPath>..\..\Project ZX\DeckEditor\WPFVisifire.Charts.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -92,7 +95,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\CardDetailModel.cs" />
+    <Compile Include="Model\CardQueryModel.cs" />
     <Compile Include="Utils\DialogUtils.cs" />
+    <Compile Include="ViewModel\AllViewModel.cs" />
     <Compile Include="ViewModel\CardDetailViewModle.cs" />
     <Compile Include="ViewModel\CardPreviewViewModel.cs" />
     <Compile Include="ViewModel\DeckViewModel.cs" />
@@ -107,15 +112,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enums\Type.cs" />
     <Compile Include="Utils\CardUtils.cs" />
     <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="ViewModel\BaseViewModle.cs" />
     <Compile Include="Command\DelegateCommand.cs" />
-    <Compile Include="ViewModel\QueryViewModel.cs" />
+    <Compile Include="ViewModel\CardQueryViewModel.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\CardModel.cs" />
-    <Compile Include="ViewModel\DeckEditorViewModel.cs" />
     <Compile Include="Model\DeckModel.cs" />
     <Compile Include="Model\CardPreviewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

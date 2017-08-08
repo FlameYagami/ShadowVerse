@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="卡包覆写" Height="240" Width="300" WindowStartupLocation="CenterOwner"
+        Title="卡包覆写" Height="230" Width="300" WindowStartupLocation="CenterOwner"
         Style="{DynamicResource ChildWindow}">
     <DockPanel>
         <Border Style="{DynamicResource BorderWindow}" Name="BorderView" Background="#1A1A1A">
@@ -14,43 +14,50 @@
                         <Label Content="卡包覆写" Style="{DynamicResource LblCenter}" Foreground="White" FontSize="16" />
                     </Grid>
                 </Border>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <Button Name="BtnFileOpen" Click="FileOpen_Click" Content="文件选择" Width="75" />
-                    <Border Style="{DynamicResource ControlBorder}" Margin="5,2.5,5,2.5" Width="175"
-                            Background="White">
-                        <TextBox Name="TxtFilePath" Grid.Column="1" Style="{DynamicResource ControlTransparent}"
-                                 VerticalContentAlignment="Center" />
-                    </Border>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Height="30" Margin="5">
-                    <Label Grid.Column="0" Content="卡包名称:" Foreground="White" Margin="5,2.5,5,2.5" Width="75"
-                           HorizontalContentAlignment="Center" />
-                    <Border Style="{DynamicResource ControlBorder}" Margin="5,2.5,5,2.5" Width="175"
-                            Background="White">
-                        <TextBox Grid.Column="1" Name="TxtPackName" Style="{DynamicResource ControlTransparent}"
-                                 VerticalContentAlignment="Center" />
-                    </Border>
-                </StackPanel>
-                <Button x:Name="BtnClear" Content="一键清理" Margin="25,0,0,5" Width="200" Click="BtnClear_Click" />
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="75" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="BtnAbilitCover" Grid.Column="0" Content="技能覆写" Margin="5" Width="100"
-                            Click="BtnAbilitCover_Click" />
-                    <Button x:Name="BtnNameCover" Grid.Column="1" Content="名称覆写" Margin="5" Width="100"
-                            Click="BtnNameCover_Click" />
+                    <Button Name="BtnFileOpen" Click="FileOpen_Click" Content="文件选择" />
+                    <Border Grid.Column="1" Style="{DynamicResource ControlBorder}" Margin="5,2.5,5,2.5"
+                            Background="White">
+                        <TextBox Name="TxtFilePath" Grid.Column="1" Style="{DynamicResource ControlTransparent}" />
+                    </Border>
                 </Grid>
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="BtnCancel" Grid.Column="0" Content="取消" Margin="5" Width="100"
-                            Click="BtnCancel_Click" />
-                    <Button x:Name="BtnCover" Grid.Column="1" Content="覆写" Margin="5" Width="100"
-                            Click="BtnCover_Click" />
+                    <Button x:Name="BtnNameCover" Grid.Column="0" Content="名称覆写" Margin="5"
+                            Click="BtnNameCover_Click" />
+                    <Button x:Name="BtnCvCover" Grid.Column="1" Content="声优覆写" Margin="5"
+                            Click="BtnCvCover_Click" />
+                    <Button x:Name="BtnAbilitCover" Grid.Column="2" Content="技能覆写" Margin="5"
+                            Click="BtnAbilitCover_Click" />
+                </Grid>
+                <Grid Height="30" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="表格名称:" Foreground="White" Margin="5,2.5,5,2.5" Width="75"
+                           HorizontalContentAlignment="Center" />
+                    <Border Grid.Column="1" Style="{DynamicResource ControlBorder}" Margin="5,2.5,5,2.5"
+                            Background="White">
+                        <TextBox Grid.Column="1" Name="TxtPackName" Style="{DynamicResource ControlTransparent}" />
+                    </Border>
+                </Grid>
+                <Button Content="基础覆写" Margin="10,0" Click="BtnBaseCover_Click" />
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="取消" Margin="5" Click="BtnCancel_Click" />
+                    <Button Grid.Column="1" Content="清理" Margin="5" Click="BtnClear_Click" />
                 </Grid>
             </StackPanel>
         </Border>
