@@ -17,5 +17,6 @@ namespace ShadowVerse.Model
         public List<string> ImagePathList { get; set; }
         public string ImageCurrentPath { get; set; }
         public List<string> EvoDescriptionList { get; set; }
+        public List<string> FlavourList { get; set; }
     }
 }

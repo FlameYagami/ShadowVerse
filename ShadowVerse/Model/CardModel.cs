@@ -15,5 +15,6 @@ namespace ShadowVerse.Model
         public int Life { get; set; }
         public int EvoLife { get; set; }
         public string SkillJson { get; set; }
+        public string FlavourJosn { get; set; }
     }
 }

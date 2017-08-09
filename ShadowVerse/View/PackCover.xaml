@@ -30,12 +30,15 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button x:Name="BtnNameCover" Grid.Column="0" Content="名称覆写" Margin="5"
                             Click="BtnNameCover_Click" />
                     <Button x:Name="BtnCvCover" Grid.Column="1" Content="声优覆写" Margin="5"
                             Click="BtnCvCover_Click" />
-                    <Button x:Name="BtnAbilitCover" Grid.Column="2" Content="技能覆写" Margin="5"
+                    <Button x:Name="BtnLinesCover" Grid.Column="2" Content="台词覆写" Margin="5"
+                            Click="BtnLinesCover_Click" />
+                    <Button x:Name="BtnAbilitCover" Grid.Column="3" Content="技能覆写" Margin="5"
                             Click="BtnAbilitCover_Click" />
                 </Grid>
                 <Grid Height="30" Margin="5">

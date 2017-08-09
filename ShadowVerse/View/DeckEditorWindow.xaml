@@ -41,11 +41,10 @@
                             </Image>
                         </Border>
                     </Border>
-                    <Border Style="{DynamicResource ControlBorder}" Grid.Row="1" Margin="10">
+                    <Border Style="{DynamicResource ControlBorder}" Grid.Row="1" Margin="10,0,10,10">
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30" />
-                                <RowDefinition Height="25" />
                                 <RowDefinition Height="25" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
@@ -59,32 +58,32 @@
                                 <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True">
                                     <Label Content="{Binding CardDetailModel.Camp}" HorizontalContentAlignment="Center"
                                            Height="25" />
-                                    <Label Content="{Binding CardDetailModel.Type}" HorizontalContentAlignment="Center"
-                                           Height="25" />
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True">
                                     <Label Content="{Binding CardDetailModel.Pack}" HorizontalContentAlignment="Center"
                                            Height="25" />
                                     <Label Content="{Binding CardDetailModel.Cv}" HorizontalContentAlignment="Center"
                                            Height="25" />
                                 </StackPanel>
                             </Grid>
-                            <StackPanel Grid.Row="3" Orientation="Vertical" CanVerticallyScroll="True">
-                                <StackPanel Orientation="Horizontal" Height="30">
-                                    <Label Content="{Binding CardDetailModel.EvoDescriptionList[0]}" FontSize="16" />
-                                    <Label Content="{Binding CardDetailModel.Atk}" Margin="5" FontSize="16" Foreground="Red"/>
-                                    <Label Content="{Binding CardDetailModel.Life}" Margin="5" FontSize="16" Foreground="Green"/>
-                                </StackPanel>
-                                <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.SkillList[0]}" />
-                                <StackPanel Orientation="Horizontal" Height="30">
-                                    <Label Content="{Binding CardDetailModel.EvoDescriptionList[1]}" FontSize="16" />
-                                    <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="5" FontSize="16" Foreground="Red"/>
-                                    <Label Content="{Binding CardDetailModel.EvoLife}" Margin="5" FontSize="16" Foreground="Green"/>
-                                </StackPanel>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.SkillList[1]}" />
-                            </StackPanel>
+                            <ScrollViewer  Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer.Content>
+                                    <StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Orientation="Horizontal" Height="30">
+                                            <Label Content="{Binding CardDetailModel.EvoDescriptionList[0]}" FontSize="16" />
+                                            <Label Content="{Binding CardDetailModel.Atk}" Margin="5" FontSize="16" Foreground="Red"/>
+                                            <Label Content="{Binding CardDetailModel.Life}" Margin="5" FontSize="16" Foreground="Green"/>
+                                        </StackPanel>
+                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.SkillList[0]}" Margin="0,5,0,0"/>
+                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[0]}" Margin="0,5,0,0"/>
+                                        <StackPanel Orientation="Horizontal" Height="30">
+                                            <Label Content="{Binding CardDetailModel.EvoDescriptionList[1]}" FontSize="16" />
+                                            <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="5" FontSize="16" Foreground="Red"/>
+                                            <Label Content="{Binding CardDetailModel.EvoLife}" Margin="5" FontSize="16" Foreground="Green"/>
+                                        </StackPanel>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.SkillList[1]}" Margin="0,5,0,0"/>
+                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[1]}" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </ScrollViewer.Content>
+                            </ScrollViewer>
                         </Grid>
                     </Border>
                 </Grid>
@@ -94,7 +93,7 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <DockPanel>
-                        <Button DockPanel.Dock="Left" Command="{Binding CmdExit}" Content="退出" Margin="0,10,10,0"
+                        <Button DockPanel.Dock="Left" Command="{Binding CmdExit}" Content="退出" Margin="10,10,10,0"
                                 Width="60" />
                         <Border Style="{DynamicResource ControlBorder}" Margin="0, 10 ,10 ,0">
                             <Grid Name="GridQuery" VerticalAlignment="Center" Height="90">
@@ -143,7 +142,7 @@
                             <RowDefinition Height="160" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Grid Height="30" Width="590">
+                        <Grid Height="30" Width="600">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />

@@ -17,6 +17,7 @@
         public const string ColumnEvoAtk = "Evo_Atk";
         public const string ColumnEvoLife = "Evo_Life";
         public const string ColumnSkill = "Skill";
+        public const string ColumnFlavour = "Flavour";
 
         //DeckEditor
         public static string[] ColumKeyArray =

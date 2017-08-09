@@ -205,5 +205,37 @@ namespace ShadowVerse.View
             var isExecute = SqliteUtils.Execute(insertSqlList);
             BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
         }
+
+        private void BtnLinesCover_Click(object sender, RoutedEventArgs e)
+        {
+            var filePath = TxtFilePath.Text.Trim();
+            if (filePath.Equals(""))
+            {
+                BaseDialogUtils.ShowDlg("源文件不存在");
+                return;
+            }
+            var jsonString = FileUtils.GetFileContent(filePath);
+            var flavourDic = JsonUtils.GetDictionary(jsonString);
+            var tempFlavourDic = new Dictionary<string, string>();
+            var tempFlavourList = new List<string>();
+            foreach (var dic in flavourDic)
+                if (dic.Key.EndsWith("_01") || dic.Key.EndsWith("_02"))
+                    if (dic.Key.EndsWith("_01"))
+                    {
+                        tempFlavourList.Clear();
+                        tempFlavourList.Add(dic.Value);
+                    }
+                    else
+                    {
+                        tempFlavourList.Add(dic.Value);
+                        tempFlavourDic.Add(dic.Key.Substring(0, 9), JsonUtils.JsonSerializer(tempFlavourList));
+                    }
+                else
+                    tempFlavourDic.Add(dic.Key, dic.Value);
+            var sqlList = GetUpdateSqlList(SqliteConst.ColumnFlavour, tempFlavourDic);
+            // 数据库覆写
+            var isExecute = SqliteUtils.Execute(sqlList);
+            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+        }
     }
 }

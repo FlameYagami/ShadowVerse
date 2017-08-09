@@ -30,7 +30,8 @@ namespace ShadowVerse.Utils
                 EvoLife = int.Parse(row[ColumnEvoLife].ToString()),
                 Cv = row[ColumnCv].ToString(),
                 Name = row[ColumnName].ToString(),
-                SkillJson = row[ColumnSkill].ToString()
+                SkillJson = row[ColumnSkill].ToString(),
+                FlavourJosn = row[ColumnFlavour].ToString()
             };
         }
 

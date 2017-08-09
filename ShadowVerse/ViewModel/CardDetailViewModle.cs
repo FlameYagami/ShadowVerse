@@ -39,7 +39,12 @@ namespace ShadowVerse.ViewModel
             var skillList = isFollower
                 ? JsonUtils.JsonDeserialize<List<string>>(cardModel.SkillJson)
                 : new List<string> {cardModel.SkillJson};
-            var evoDescriptionList = isFollower ? new List<string> {"进化前", "进化后"} : new List<string> {"", ""};
+            var flavourList = isFollower
+                ? JsonUtils.JsonDeserialize<List<string>>(cardModel.FlavourJosn)
+                : new List<string>() {cardModel.FlavourJosn};
+            var evoDescriptionList = isFollower 
+                ? new List<string> {"进化前", "进化后"} 
+                : new List<string> {"", ""};
             CardDetailModel = new CardDetailModel
             {
                 Id = id,
@@ -54,6 +59,7 @@ namespace ShadowVerse.ViewModel
                 Life = life,
                 EvoLife = evoLife,
                 SkillList = skillList,
+                FlavourList = flavourList,
                 ImagePathList = imagePathList,
                 ImageCurrentPath = imageCurrentPath,
                 EvoDescriptionList = evoDescriptionList,
