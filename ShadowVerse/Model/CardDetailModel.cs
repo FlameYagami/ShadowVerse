@@ -5,8 +5,10 @@ namespace ShadowVerse.Model
 {
     public class CardDetailModel : CardQueryModel
     {
+        public string ImageAtkPath { get; set; }
+        public string ImageLifePath { get; set; }
         public string ImageCostPath { get; set; }
-        public SolidColorBrush ImageRarity { get; set; }
+        public LinearGradientBrush BgRarity { get; set; }
         public string Atk { get; set; }
         public string EvoAtk { get; set; }
         public string Life { get; set; }

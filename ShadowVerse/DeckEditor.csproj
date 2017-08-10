@@ -163,9 +163,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="Resources\deckeditor.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Wrapper\Wrapper.csproj">
       <Project>{96748966-be90-425f-a8c8-e8708e45b77e}</Project>
       <Name>Wrapper</Name>

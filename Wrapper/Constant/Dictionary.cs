@@ -7,17 +7,17 @@ namespace Wrapper.Constant
         // Common
         public static Dictionary<int, string> ImageCostDic = new Dictionary<int, string>
         {
-            {0, ""},
-            {1, $"{PathManager.TexturesPath}cost_1.png"},
-            {2, $"{PathManager.TexturesPath}cost_2.png"},
-            {3, $"{PathManager.TexturesPath}cost_3.png"},
-            {4, $"{PathManager.TexturesPath}cost_4.png"},
-            {5, $"{PathManager.TexturesPath}cost_5.png"},
-            {6, $"{PathManager.TexturesPath}cost_6.png"},
-            {7, $"{PathManager.TexturesPath}cost_7.png"},
-            {8, $"{PathManager.TexturesPath}cost_8.png"},
-            {9, $"{PathManager.TexturesPath}cost_9.png"},
-            {10, $"{PathManager.TexturesPath}cost_10.png"}
+            {0, string.Empty},
+            {1, PathManager.Cost1Path},
+            {2, PathManager.Cost2Path},
+            {3, PathManager.Cost3Path},
+            {4, PathManager.Cost4Path},
+            {5, PathManager.Cost5Path},
+            {6, PathManager.Cost6Path},
+            {7, PathManager.Cost7Path},
+            {8, PathManager.Cost8Path},
+            {9, PathManager.Cost9Path},
+            {10, PathManager.Cost10Path}
         };
 
         public static Dictionary<int, string> TypeCodeDic = new Dictionary<int, string>

@@ -31,15 +31,12 @@
                         <RowDefinition Height="280" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Border Style="{StaticResource ControlBorder}" Margin="10">
-                        <Border BorderBrush="{Binding CardDetailModel.ImageRarity}" CornerRadius="5"
-                                BorderThickness="3">
-                            <Image Source="{Binding CardDetailModel.ImageCurrentPath}" Height="250" Width="200">
-                                <Image.InputBindings>
-                                    <MouseBinding MouseAction="RightClick" Command="{Binding CmdImageChange}" />
-                                </Image.InputBindings>
-                            </Image>
-                        </Border>
+                    <Border Margin="10" Background="{Binding CardDetailModel.BgRarity}">
+                        <Image Source="{Binding CardDetailModel.ImageCurrentPath}" Height="250" Width="200">
+                            <Image.InputBindings>
+                                <MouseBinding MouseAction="RightClick" Command="{Binding CmdImageChange}" />
+                            </Image.InputBindings>
+                        </Image>
                     </Border>
                     <Border Style="{DynamicResource ControlBorder}" Grid.Row="1" Margin="10,0,10,10">
                         <Grid Margin="5">
@@ -49,38 +46,48 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <DockPanel>
-                                <Image DockPanel.Dock="Left" Width="20" Height="20"
+                                <Image DockPanel.Dock="Left" Width="25" Height="25"
                                        Source="{Binding CardDetailModel.ImageCostPath}" />
-                                <Label Content="{Binding CardDetailModel.Name}" FontSize="16" Margin="5,0"/>
+                                <Label Content="{Binding CardDetailModel.Name}" FontSize="16" Margin="10,0,0,0"/>
                             </DockPanel>
 
                             <Grid Grid.Row="1">
                                 <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True">
-                                    <Label Content="{Binding CardDetailModel.Camp}" HorizontalContentAlignment="Center"
-                                           Height="25" />
-                                    <Label Content="{Binding CardDetailModel.Pack}" HorizontalContentAlignment="Center"
-                                           Height="25" />
-                                    <Label Content="{Binding CardDetailModel.Cv}" HorizontalContentAlignment="Center"
-                                           Height="25" />
+                                    <Label Content="{Binding CardDetailModel.Camp}" HorizontalContentAlignment="Center"/>
+                                    <Label Content="{Binding CardDetailModel.Pack}" HorizontalContentAlignment="Center"/>
+                                    <Label Content="{Binding CardDetailModel.Cv}" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
+                            
                             <ScrollViewer  Grid.Row="2" VerticalScrollBarVisibility="Auto">
                                 <ScrollViewer.Content>
                                     <StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <StackPanel Orientation="Horizontal" Height="30">
                                             <Label Content="{Binding CardDetailModel.EvoDescriptionList[0]}" FontSize="16" />
-                                            <Label Content="{Binding CardDetailModel.Atk}" Margin="5" FontSize="16" Foreground="Red"/>
-                                            <Label Content="{Binding CardDetailModel.Life}" Margin="5" FontSize="16" Foreground="Green"/>
+                                            <Grid>
+                                                <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
+                                                <Label Content="{Binding CardDetailModel.Atk}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                            <Grid>
+                                                <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
+                                                <Label Content="{Binding CardDetailModel.Life}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                            </Grid>
                                         </StackPanel>
                                         <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.SkillList[0]}" Margin="0,5,0,0"/>
-                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[0]}" Margin="0,5,0,0"/>
-                                        <StackPanel Orientation="Horizontal" Height="30">
+                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[0]}" Margin="0,5,0,0" FontSize="12"/>
+                                        <StackPanel Orientation="Horizontal" Height="30" Margin="0,5,0,0">
                                             <Label Content="{Binding CardDetailModel.EvoDescriptionList[1]}" FontSize="16" />
-                                            <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="5" FontSize="16" Foreground="Red"/>
-                                            <Label Content="{Binding CardDetailModel.EvoLife}" Margin="5" FontSize="16" Foreground="Green"/>
+                                            <Grid>
+                                                <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
+                                                <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                            <Grid>
+                                                <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
+                                                <Label Content="{Binding CardDetailModel.EvoLife}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                            </Grid>
                                         </StackPanel>
                                         <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.SkillList[1]}" Margin="0,5,0,0"/>
-                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[1]}" Margin="0,5,0,0"/>
+                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[1]}" Margin="0,5,0,0" FontSize="12"/>
                                     </StackPanel>
                                 </ScrollViewer.Content>
                             </ScrollViewer>
@@ -112,20 +119,20 @@
                                 <Label Grid.Column="0" Grid.Row="0" Style="{DynamicResource LblCenter}" Content="种类" />
                                 <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource LblCenter}" Content="职业" />
                                 <Label Grid.Column="0" Grid.Row="2" Style="{DynamicResource LblCenter}" Content="罕贵" />
-                                <ComboBox Grid.Column="1" Grid.Row="0" Text="{Binding CardModel.Type}"
+                                <ComboBox Grid.Column="1" Grid.Row="0" Text="{Binding CardQueryModel.Type}"
                                           ItemsSource="{Binding TypeList}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="1" Grid.Row="1" Text="{Binding CardModel.Camp}"
+                                <ComboBox Grid.Column="1" Grid.Row="1" Text="{Binding CardQueryModel.Camp}"
                                           ItemsSource="{Binding CampList}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="1" Grid.Row="2" Text="{Binding CardModel.Rarity}"
-                                          ItemsSource="{Binding RarityList}" SelectedIndex="0" IsEditable="False" />
+                                <ComboBox Grid.Column="1" Grid.Row="2" Text="{Binding CardQueryModel.Rarity}"
+                                          ItemsSource="{Binding RarityList}" SelectedIndex="0" />
                                 <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource LblCenter}" Content="声优" />
                                 <Label Grid.Column="2" Grid.Row="0" Style="{DynamicResource LblCenter}" Content="卡包" />
                                 <Label Grid.Column="2" Grid.Row="2" Style="{DynamicResource LblCenter}" Content="费用" />
                                 <ComboBox Grid.Column="3" Grid.Row="1" ItemsSource="{Binding CvList}"
-                                          Text="{Binding CardModel.Cv}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="3" Grid.Row="0" Text="{Binding CardModel.Pack}"
+                                          Text="{Binding CardQueryModel.Cv}" SelectedIndex="0" IsEditable="False" />
+                                <ComboBox Grid.Column="3" Grid.Row="0" Text="{Binding CardQueryModel.Pack}"
                                           ItemsSource="{Binding PackList}" SelectedIndex="0" IsEditable="False" />
-                                <TextBox Text="{Binding CardModel.Cost}" Grid.Column="3" Grid.Row="2"
+                                <TextBox Text="{Binding CardQueryModel.Cost}" Grid.Column="3" Grid.Row="2"
                                          ToolTip="区间以连接号分开（A-B）" />
                                 <Button Name="BtnQuery" Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="5"
                                         Command="{Binding CmdQuery}"

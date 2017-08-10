@@ -47,7 +47,7 @@ namespace ShadowVerse.Utils
 
         private static List<string> GetPathList(int id, string parentPath)
         {
-            var unMonsterPathList = new List<string> {$"{PathManager.ThumbnailPath}/{id}0{StringConst.ImageExtension}"};
+            var unMonsterPathList = new List<string> {$"{parentPath}/{id}0{StringConst.ImageExtension}"};
             var allThumbnailPathList = new List<string>
             {
                 $"{parentPath}/{id}0{StringConst.ImageExtension}",

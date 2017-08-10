@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using ShadowVerse.Command;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
+using Wrapper;
 using Wrapper.Constant;
 using Wrapper.Utils;
 
@@ -36,6 +38,8 @@ namespace ShadowVerse.ViewModel
             var evoAtk = isFollower ? cardModel.EvoAtk.ToString() : "";
             var life = isFollower ? cardModel.Life.ToString() : "";
             var evoLife = isFollower ? cardModel.EvoLife.ToString() : "";
+            var imageAtkPath = isFollower ? PathManager.AtkPath : "";
+            var imageLifePath = isFollower ? PathManager.LifePath : "";
             var skillList = isFollower
                 ? JsonUtils.JsonDeserialize<List<string>>(cardModel.SkillJson)
                 : new List<string> {cardModel.SkillJson};
@@ -63,31 +67,41 @@ namespace ShadowVerse.ViewModel
                 ImagePathList = imagePathList,
                 ImageCurrentPath = imageCurrentPath,
                 EvoDescriptionList = evoDescriptionList,
-                ImageRarity = GetRarityColor(cardModel.RarityCode),
-                ImageCostPath = imageCostPath
+                BgRarity = GetBgRarity(cardModel.RarityCode),
+                ImageCostPath = imageCostPath,
+                ImageAtkPath = imageAtkPath,
+                ImageLifePath = imageLifePath,
             };
             OnPropertyChanged(nameof(CardDetailModel));
         }
 
-        private static SolidColorBrush GetRarityColor(int rarityCode)
+        private static LinearGradientBrush GetBgRarity(int rarityCode)
         {
-            var solidColorBrush = new SolidColorBrush();
+            var brush =
+                new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 1)
+                };
             switch (rarityCode)
             {
                 case StringConst.LegendaryCode:
-                    solidColorBrush.Color = Colors.DarkViolet;
+                    brush.GradientStops.Add(new GradientStop(Colors.DarkViolet, 0.0));
+                    brush.GradientStops.Add(new GradientStop(Colors.Red, 0.25));
+                    brush.GradientStops.Add(new GradientStop(Colors.Green, 0.75));
+                    brush.GradientStops.Add(new GradientStop(Colors.Yellow, 1.0));
                     break;
                 case StringConst.GoldCode:
-                    solidColorBrush.Color = Colors.Gold;
+                    brush.GradientStops.Add(new GradientStop(Colors.Gold, 0.0));
                     break;
                 case StringConst.SilverCode:
-                    solidColorBrush.Color = Colors.Silver;
+                    brush.GradientStops.Add(new GradientStop(Colors.Silver, 0.0));
                     break;
                 case StringConst.BronzeCode:
-                    solidColorBrush.Color = Colors.SaddleBrown;
+                    brush.GradientStops.Add(new GradientStop(Colors.SaddleBrown, 0.0));
                     break;
             }
-            return solidColorBrush;
+            return brush;
         }
 
         public void Image_Changed(object obj)
