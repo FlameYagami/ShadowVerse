@@ -19,10 +19,12 @@ namespace ShadowVerse.View
             DataContext = new AllViewModel(this);
             GvDeck.DataContext = new DeckViewModel();
             GridQuery.DataContext = new CardQueryModelView();
+            GvCardDetail.DataContext = new CardDetailViewModle();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
         }
 
         private void Title_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -32,8 +34,7 @@ namespace ShadowVerse.View
 
         private void Title_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                DragMove();
+            if (e.LeftButton == MouseButtonState.Pressed) DragMove();
         }
 
         private void CmbDeck_DropDownClosed(object sender, EventArgs e)
@@ -49,7 +50,7 @@ namespace ShadowVerse.View
         private void LvDeckItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var image = sender as Image;
-            Debug.Assert(image != null);
+            if (null == image) return;
             var id = int.Parse(image.Tag.ToString());
             ((DeckViewModel) GvDeck.DataContext).DeleteCard(id);
         }
@@ -57,11 +58,11 @@ namespace ShadowVerse.View
         private void LvDeckItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var image = sender as Image;
-            Debug.Assert(image != null);
+            if (null == image) return;;
             var id = int.Parse(image.Tag.ToString());
             if (e.ClickCount == 1)
             {
-                GvCardDetail.DataContext = new CardDetailViewModle(id);
+                ((CardDetailViewModle)GvCardDetail.DataContext).UpdateCardDetailModel(id);
             }
             if (e.ClickCount == 2)
             {
@@ -72,14 +73,14 @@ namespace ShadowVerse.View
         private void CardPreview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var previewModel = LvPreview.SelectedItem as CardPreviewModel;
-            Debug.Assert(previewModel != null);
-            GvCardDetail.DataContext = new CardDetailViewModle(previewModel.Id);
+            if (null == previewModel) return;
+            ((CardDetailViewModle) GvCardDetail.DataContext).UpdateCardDetailModel(previewModel.Id);
         }
 
         private void CardPreviewItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var grid = sender as Grid;
-            Debug.Assert(grid != null);
+            if (null == grid) return;
             var id = int.Parse(grid.Tag.ToString());
             ((DeckViewModel) GvDeck.DataContext).AddCard(id);
         }

@@ -13,17 +13,14 @@ namespace ShadowVerse.ViewModel
 {
     public class CardDetailViewModle : BaseViewModle
     {
-        public CardDetailViewModle(int id)
+        public DelegateCommand CmdImageChange { get; set; }
+        public CardDetailModel CardDetailModel { get; set; }
+        public CardDetailViewModle()
         {
             CmdImageChange = new DelegateCommand {ExecuteCommand = Image_Changed};
-            SetCardDetailModel(id);
         }
 
-        public DelegateCommand CmdImageChange { get; set; }
-
-        public CardDetailModel CardDetailModel { get; set; }
-
-        private void SetCardDetailModel(int id)
+        public void UpdateCardDetailModel(int id)
         {
             var cardModel = CardUtils.GetCardModel(id);
             var isFollower = CardUtils.IsFollower(id);

@@ -300,7 +300,7 @@
                                               Content="{TemplateBinding SelectionBoxItem}"
                                               ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                               ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                              Margin="3,3,23,3"
+                                              Margin="5,5,25,5"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Left" />
                             <TextBox x:Name="PART_EditableTextBox"
@@ -308,7 +308,7 @@
                                      Template="{StaticResource ComboBoxTextBox}"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Margin="3,3,23,3"
+                                     Margin="5,5,25,5"
                                      Focusable="True"
                                      Background="Transparent"
                                      Visibility="Hidden"
