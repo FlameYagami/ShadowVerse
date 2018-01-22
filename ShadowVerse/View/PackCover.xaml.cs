@@ -3,18 +3,20 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using Common;
 using Dialog;
 using ShadowVerse.Model;
-using ShadowVerse.Utils;
+using Wrapper;
 using Wrapper.Constant;
 using Wrapper.Utils;
+using ExcelHelper = ShadowVerse.Utils.ExcelHelper;
 
 namespace ShadowVerse.View
 {
     /// <summary>
     ///     PackCover.xaml 的交互逻辑
     /// </summary>
-    public partial class PackCover : Window
+    public partial class PackCover
     {
         public PackCover()
         {
@@ -26,18 +28,18 @@ namespace ShadowVerse.View
             Close();
         }
 
-        private void BtnBaseCover_Click(object sender, RoutedEventArgs e)
+        private async void BtnBaseCover_Click(object sender, RoutedEventArgs e)
         {
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("源文件不存在");
+                BaseDialogUtils.ShowDialogAuto("源文件不存在");
                 return;
             }
             var packName = TxtPackName.Text.Trim();
             if (packName.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("请输入表格名称");
+                BaseDialogUtils.ShowDialogAuto("请输入表格名称");
                 return;
             }
             // 获取源文件所有的信息
@@ -45,24 +47,24 @@ namespace ShadowVerse.View
             var isImport = ExcelHelper.ImportExcelToDataTable(filePath, packName, dtSource);
             if (!isImport)
             {
-                BaseDialogUtils.ShowDlg("文件中数据异常");
+                BaseDialogUtils.ShowDialogAuto("文件中数据异常");
                 return;
             }
             // 确认状态
-            if (!BaseDialogUtils.ShowDlgOkCancel("确认覆写?"))
+            if (!await BaseDialogUtils.ShowDialogConfirm("确认覆写?"))
                 return;
             var sourceCardEntitys = GetSourceCardEntities(dtSource);
             // 生成覆写的数据库语句集合
             var insertSqlList = GetInsertSqlList(sourceCardEntitys);
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(insertSqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(insertSqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
 
         public static List<string> GetClearSqlList()
         {
             var dataSet = new DataSet();
-            SqliteUtils.FillDataToDataSet(SqlUtils.GetQueryAllSql(), dataSet);
+            DataManager.FillDataToDataSet(dataSet,SqlUtils.GetQueryAllSql());
 //            var idList = dataSet.Tables[SqliteConst.TableName].Rows.Cast<DataRow>()
 //                .Select(row => row[SqliteConst.ColumnId].ToString())
 //                .Where(id => id.EndsWith("1"))
@@ -136,8 +138,8 @@ namespace ShadowVerse.View
         {
             var sqlList = GetClearSqlList();
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(sqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(sqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
 
         private void BtnAbilitCover_Click(object sender, RoutedEventArgs e)
@@ -145,7 +147,7 @@ namespace ShadowVerse.View
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("源文件不存在");
+                BaseDialogUtils.ShowDialogAuto("源文件不存在");
                 return;
             }
             var jsonString = FileUtils.GetFileContent(filePath);
@@ -157,19 +159,19 @@ namespace ShadowVerse.View
                     if (dic.Key.EndsWith("_01"))
                     {
                         tempAbilityList.Clear();
-                        tempAbilityList.Add(dic.Value);
+                        tempAbilityList.Add(dic.Value.ToString());
                     }
                     else
                     {
-                        tempAbilityList.Add(dic.Value);
-                        tempAbilityDic.Add(dic.Key.Substring(0, 9), JsonUtils.JsonSerializer(tempAbilityList));
+                        tempAbilityList.Add(dic.Value.ToString());
+                        tempAbilityDic.Add(dic.Key.Substring(0, 9), JsonUtils.Serializer(tempAbilityList));
                     }
                 else
-                    tempAbilityDic.Add(dic.Key, dic.Value);
+                    tempAbilityDic.Add(dic.Key, dic.Value.ToString());
             var sqlList = GetUpdateSqlList(SqliteConst.ColumnSkill, tempAbilityDic);
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(sqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(sqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
 
         private void BtnNameCover_Click(object sender, RoutedEventArgs e)
@@ -177,7 +179,7 @@ namespace ShadowVerse.View
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("源文件不存在");
+                BaseDialogUtils.ShowDialogAuto("源文件不存在");
                 return;
             }
             var jsonString = FileUtils.GetFileContent(filePath);
@@ -185,8 +187,8 @@ namespace ShadowVerse.View
             // 生成覆写的数据库语句集合
             var insertSqlList = GetUpdateSqlList(SqliteConst.ColumnName, cvDic);
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(insertSqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(insertSqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
 
         private void BtnCvCover_Click(object sender, RoutedEventArgs e)
@@ -194,7 +196,7 @@ namespace ShadowVerse.View
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("源文件不存在");
+                BaseDialogUtils.ShowDialogAuto("源文件不存在");
                 return;
             }
             var jsonString = FileUtils.GetFileContent(filePath);
@@ -202,8 +204,8 @@ namespace ShadowVerse.View
             // 生成覆写的数据库语句集合
             var insertSqlList = GetUpdateSqlList(SqliteConst.ColumnCv, cvDic);
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(insertSqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(insertSqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
 
         private void BtnLinesCover_Click(object sender, RoutedEventArgs e)
@@ -211,7 +213,7 @@ namespace ShadowVerse.View
             var filePath = TxtFilePath.Text.Trim();
             if (filePath.Equals(""))
             {
-                BaseDialogUtils.ShowDlg("源文件不存在");
+                BaseDialogUtils.ShowDialogAuto("源文件不存在");
                 return;
             }
             var jsonString = FileUtils.GetFileContent(filePath);
@@ -223,19 +225,19 @@ namespace ShadowVerse.View
                     if (dic.Key.EndsWith("_01"))
                     {
                         tempFlavourList.Clear();
-                        tempFlavourList.Add(dic.Value);
+                        tempFlavourList.Add(dic.Value.ToString());
                     }
                     else
                     {
-                        tempFlavourList.Add(dic.Value);
-                        tempFlavourDic.Add(dic.Key.Substring(0, 9), JsonUtils.JsonSerializer(tempFlavourList));
+                        tempFlavourList.Add(dic.Value.ToString());
+                        tempFlavourDic.Add(dic.Key.Substring(0, 9), JsonUtils.Serializer(tempFlavourList));
                     }
                 else
-                    tempFlavourDic.Add(dic.Key, dic.Value);
+                    tempFlavourDic.Add(dic.Key, dic.Value.ToString());
             var sqlList = GetUpdateSqlList(SqliteConst.ColumnFlavour, tempFlavourDic);
             // 数据库覆写
-            var isExecute = SqliteUtils.Execute(sqlList);
-            BaseDialogUtils.ShowDlg(isExecute ? "Succeed" : "Failed");
+            var isExecute = DataManager.Execute(sqlList);
+            BaseDialogUtils.ShowDialogAuto(isExecute ? "Succeed" : "Failed");
         }
     }
 }

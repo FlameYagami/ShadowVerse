@@ -25,5 +25,8 @@ namespace Wrapper
         public static string Cost8Path = $"{TexturesPath}cost_1.png";
         public static string Cost9Path = $"{TexturesPath}cost_1.png";
         public static string Cost10Path = $"{TexturesPath}cost_1.png";
+
+        // BahamutCardCrawler
+        public static string Cg = $"{RootPath}CG\\";
     }
 }

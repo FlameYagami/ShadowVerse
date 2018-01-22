@@ -2,7 +2,7 @@
 
 namespace Wrapper.Constant
 {
-    public class Dictionary
+    public class Dic
     {
         // Common
         public static Dictionary<int, string> ImageCostDic = new Dictionary<int, string>

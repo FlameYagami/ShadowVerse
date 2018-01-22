@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using ShadowVerse.Command;
+using Common;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using Wrapper;
 using Wrapper.Constant;
 using Wrapper.Utils;
+using DelegateCommand = ShadowVerse.Command.DelegateCommand;
 
 namespace ShadowVerse.ViewModel
 {
@@ -24,11 +25,11 @@ namespace ShadowVerse.ViewModel
         {
             var cardModel = CardUtils.GetCardModel(id);
             var isFollower = CardUtils.IsFollower(id);
-            var type = Dictionary.TypeCodeDic.FirstOrDefault(dic => cardModel.TypeCode == dic.Key).Value;
-            var camp = Dictionary.CampCodeDic.FirstOrDefault(dic => cardModel.CampCode == dic.Key).Value;
-            var rarity = Dictionary.RarityCodeDic.FirstOrDefault(dic => cardModel.RarityCode == dic.Key).Value;
-            var pack = Dictionary.PackCodeDic.FirstOrDefault(dic => cardModel.PackCode == dic.Key).Value;
-            var imageCostPath = Dictionary.ImageCostDic.FirstOrDefault(dic => cardModel.Cost == dic.Key).Value;
+            var type = Dic.TypeCodeDic.FirstOrDefault(dic => cardModel.TypeCode == dic.Key).Value;
+            var camp = Dic.CampCodeDic.FirstOrDefault(dic => cardModel.CampCode == dic.Key).Value;
+            var rarity = Dic.RarityCodeDic.FirstOrDefault(dic => cardModel.RarityCode == dic.Key).Value;
+            var pack = Dic.PackCodeDic.FirstOrDefault(dic => cardModel.PackCode == dic.Key).Value;
+            var imageCostPath = Dic.ImageCostDic.FirstOrDefault(dic => cardModel.Cost == dic.Key).Value;
             var imagePathList = CardUtils.GetPicturePathList(cardModel.Id);
             var imageCurrentPath = imagePathList[0];
             var atk = isFollower ? cardModel.Atk.ToString() : "";
@@ -38,10 +39,10 @@ namespace ShadowVerse.ViewModel
             var imageAtkPath = isFollower ? PathManager.AtkPath : "";
             var imageLifePath = isFollower ? PathManager.LifePath : "";
             var skillList = isFollower
-                ? JsonUtils.JsonDeserialize<List<string>>(cardModel.SkillJson)
+                ? JsonUtils.Deserialize<List<string>>(cardModel.SkillJson)
                 : new List<string> {cardModel.SkillJson};
             var flavourList = isFollower
-                ? JsonUtils.JsonDeserialize<List<string>>(cardModel.FlavourJosn)
+                ? JsonUtils.Deserialize<List<string>>(cardModel.FlavourJosn)
                 : new List<string>() {cardModel.FlavourJosn};
             var evoDescriptionList = isFollower 
                 ? new List<string> {"进化前", "进化后"} 

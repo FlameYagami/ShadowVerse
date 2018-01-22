@@ -7,6 +7,7 @@ using ShadowVerse.Command;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using ShadowVerse.View;
+using Wrapper;
 using Wrapper.Constant;
 using Wrapper.Utils;
 
@@ -21,10 +22,10 @@ namespace ShadowVerse.ViewModel
             CmdReset = new DelegateCommand {ExecuteCommand = Reset_Click};
             // Cmb数据绑定
             CvList = CardUtils.GetCvList();
-            CampList = Dictionary.CampCodeDic.Values.ToList();
-            RarityList = Dictionary.RarityCodeDic.Values.ToList();
-            PackList = Dictionary.PackCodeDic.Values.ToList();
-            TypeList = Dictionary.TypeCodeDic.Values.Distinct().ToList();
+            CampList = Dic.CampCodeDic.Values.ToList();
+            RarityList = Dic.RarityCodeDic.Values.ToList();
+            PackList = Dic.PackCodeDic.Values.ToList();
+            TypeList = Dic.TypeCodeDic.Values.Distinct().ToList();
         }
 
         public List<string> TypeList { get; set; }
@@ -41,7 +42,7 @@ namespace ShadowVerse.ViewModel
             OnPropertyChanged(nameof(CardQueryModel));
             var sql = GetQuerySql();
             var dataSet = new DataSet();
-            SqliteUtils.FillDataToDataSet(sql, dataSet);
+            DataManager.FillDataToDataSet(dataSet, sql);
             var previewList = GetCardPreviewList(dataSet);
             ((DeckEditorWindow) AllViewModel.Window).GvCardPreview.DataContext = new CardPreviewViewModel(previewList);
         }
@@ -56,14 +57,14 @@ namespace ShadowVerse.ViewModel
         {
             // 对应Cmb的值转换成数据库中查询的代码
             var typeCode =
-                Dictionary.TypeCodeDic.FirstOrDefault(type => type.Value.Equals(CardQueryModel.Type)).Key.ToString();
+                Dic.TypeCodeDic.FirstOrDefault(type => type.Value.Equals(CardQueryModel.Type)).Key.ToString();
             var campCode =
-                Dictionary.CampCodeDic.FirstOrDefault(camp => camp.Value.Equals(CardQueryModel.Camp)).Key.ToString();
+                Dic.CampCodeDic.FirstOrDefault(camp => camp.Value.Equals(CardQueryModel.Camp)).Key.ToString();
             var rarityCode =
-                Dictionary.RarityCodeDic.FirstOrDefault(rarity => rarity.Value.Equals(CardQueryModel.Rarity))
+                Dic.RarityCodeDic.FirstOrDefault(rarity => rarity.Value.Equals(CardQueryModel.Rarity))
                     .Key.ToString();
             var packCode =
-                Dictionary.PackCodeDic.FirstOrDefault(pack => pack.Value.Equals(CardQueryModel.Pack)).Key.ToString();
+                Dic.PackCodeDic.FirstOrDefault(pack => pack.Value.Equals(CardQueryModel.Pack)).Key.ToString();
             // 动态添加查询语句
             var builder = new StringBuilder();
             builder.Append(SqlUtils.GetHeaderSql()); // 基础查询语句

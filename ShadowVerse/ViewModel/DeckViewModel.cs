@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common;
 using Dialog;
-using ShadowVerse.Command;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using ShadowVerse.View;
@@ -13,6 +13,7 @@ using Visifire.Charts;
 using Wrapper;
 using Wrapper.Constant;
 using Wrapper.Utils;
+using DelegateCommand = ShadowVerse.Command.DelegateCommand;
 
 namespace ShadowVerse.ViewModel
 {
@@ -67,13 +68,13 @@ namespace ShadowVerse.ViewModel
                 var sr = File.OpenText(deckPath);
                 var numberListString = sr.ReadToEnd().Trim();
                 sr.Close();
-                var idList = JsonUtils.JsonDeserialize<List<int>>(numberListString);
+                var idList = JsonUtils.Deserialize<List<int>>(numberListString);
                 foreach (var id in idList)
                     AddCard(id);
             }
             catch (Exception exception)
             {
-                BaseDialogUtils.ShowDlg(exception.Message);
+                BaseDialogUtils.ShowDialogAuto(exception.Message);
             }
         }
 
@@ -82,16 +83,16 @@ namespace ShadowVerse.ViewModel
             OnPropertyChanged(nameof(DeckName));
             if (DeckName.Equals(string.Empty))
             {
-                BaseDialogUtils.ShowDlg(StringConst.DeckNameNone);
+                BaseDialogUtils.ShowDialogAuto(StringConst.DeckNameNone);
                 return;
             }
             var deckPath = CardUtils.GetDeckPath(DeckName);
             var deckBuilder = new StringBuilder();
             var deckNumberList = new List<int>();
             deckNumberList.AddRange(DeckList.Select(deck => deck.Id).ToList());
-            deckBuilder.Append(JsonUtils.JsonSerializer(deckNumberList));
+            deckBuilder.Append(JsonUtils.Serializer(deckNumberList));
             var isSaveSucceed = FileUtils.SaveFile(deckPath, deckBuilder.ToString());
-            BaseDialogUtils.ShowDlg(isSaveSucceed ? StringConst.SaveSucceed : StringConst.SaveFailed);
+            BaseDialogUtils.ShowDialogAuto(isSaveSucceed ? StringConst.SaveSucceed : StringConst.SaveFailed);
         }
 
         public void DeckResave_Click(object obj)
@@ -99,13 +100,13 @@ namespace ShadowVerse.ViewModel
             OnPropertyChanged(nameof(DeckName));
             if (DeckName.Equals(string.Empty))
             {
-                BaseDialogUtils.ShowDlg(StringConst.DeckNameNone);
+                BaseDialogUtils.ShowDialogAuto(StringConst.DeckNameNone);
                 return;
             }
             var deckPath = CardUtils.GetDeckPath(DeckName);
             if (File.Exists(deckPath))
             {
-                BaseDialogUtils.ShowDlg(StringConst.DeckNameExist);
+                BaseDialogUtils.ShowDialogAuto(StringConst.DeckNameExist);
                 return;
             }
             DeckSave_Click(DeckName);
@@ -116,11 +117,11 @@ namespace ShadowVerse.ViewModel
             DeckList.Clear();
         }
 
-        public void DeckDelete_Click(object obj)
+        public async void DeckDelete_Click(object obj)
         {
             OnPropertyChanged(nameof(DeckName));
             if (DeckName.Equals(string.Empty)) return;
-            if (!BaseDialogUtils.ShowDlgOkCancel(StringConst.DeleteHint)) return;
+            if (!await BaseDialogUtils.ShowDialogConfirm(StringConst.DeleteHint)) return;
             var deckPath = CardUtils.GetDeckPath(DeckName);
             if (!File.Exists(deckPath)) return;
             File.Delete(deckPath);

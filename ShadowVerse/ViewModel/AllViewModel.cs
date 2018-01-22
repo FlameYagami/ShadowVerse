@@ -18,7 +18,7 @@ namespace ShadowVerse.ViewModel
         {
             Window = window;
             CmdExit = new DelegateCommand { ExecuteCommand = Exit_Click };
-            SqliteUtils.FillDataToDataSet(SqlUtils.GetQueryAllSql(), DsAllCache);
+            DataManager.FillDataToDataSet(DsAllCache, SqlUtils.GetQueryAllSql());
             if (!Directory.Exists(PathManager.DeckFolderPath))
                 Directory.CreateDirectory(PathManager.DeckFolderPath);
         }
