@@ -3,12 +3,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Common;
+using ShadowVerse.Constant;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using Wrapper;
 using Wrapper.Constant;
-using Wrapper.Utils;
-using DelegateCommand = ShadowVerse.Command.DelegateCommand;
 
 namespace ShadowVerse.ViewModel
 {

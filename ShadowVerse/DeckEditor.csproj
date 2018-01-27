@@ -93,8 +93,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constant\Dic.cs" />
+    <Compile Include="Constant\SqliteConst.cs" />
+    <Compile Include="Constant\StringConst.cs" />
     <Compile Include="Model\CardDetailModel.cs" />
     <Compile Include="Model\CardQueryModel.cs" />
+    <Compile Include="Utils\SqlUtils.cs" />
     <Compile Include="ViewModel\AllViewModel.cs" />
     <Compile Include="ViewModel\CardDetailViewModle.cs" />
     <Compile Include="ViewModel\CardPreviewViewModel.cs" />
@@ -113,7 +117,6 @@
     <Compile Include="Utils\CardUtils.cs" />
     <Compile Include="Utils\ExcelHelper.cs" />
     <Compile Include="ViewModel\BaseViewModle.cs" />
-    <Compile Include="Command\DelegateCommand.cs" />
     <Compile Include="ViewModel\CardQueryViewModel.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\CardModel.cs" />
@@ -163,6 +166,10 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BahamutCardCrawler\BahamutCardCrawler.csproj">
+      <Project>{FFACBE8D-7BAA-454F-9FAE-8EF96EC422D8}</Project>
+      <Name>BahamutCardCrawler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wrapper\Wrapper.csproj">
       <Project>{96748966-be90-425f-a8c8-e8708e45b77e}</Project>
       <Name>Wrapper</Name>

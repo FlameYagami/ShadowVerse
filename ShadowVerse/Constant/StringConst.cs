@@ -1,4 +1,4 @@
-﻿namespace Wrapper.Constant
+﻿namespace ShadowVerse.Constant
 {
     public class StringConst
     {

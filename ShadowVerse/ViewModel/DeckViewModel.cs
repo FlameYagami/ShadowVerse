@@ -6,14 +6,13 @@ using System.Linq;
 using System.Text;
 using Common;
 using Dialog;
+using ShadowVerse.Constant;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using ShadowVerse.View;
 using Visifire.Charts;
 using Wrapper;
 using Wrapper.Constant;
-using Wrapper.Utils;
-using DelegateCommand = ShadowVerse.Command.DelegateCommand;
 
 namespace ShadowVerse.ViewModel
 {

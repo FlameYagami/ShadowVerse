@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ShadowVerse.Constant;
 using ShadowVerse.Model;
 using Wrapper.Constant;
 

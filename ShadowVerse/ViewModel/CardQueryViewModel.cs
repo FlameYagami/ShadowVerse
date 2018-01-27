@@ -3,13 +3,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using ShadowVerse.Command;
+using Common;
+using ShadowVerse.Constant;
 using ShadowVerse.Model;
 using ShadowVerse.Utils;
 using ShadowVerse.View;
 using Wrapper;
 using Wrapper.Constant;
-using Wrapper.Utils;
 
 namespace ShadowVerse.ViewModel
 {
@@ -67,14 +67,14 @@ namespace ShadowVerse.ViewModel
                 Dic.PackCodeDic.FirstOrDefault(pack => pack.Value.Equals(CardQueryModel.Pack)).Key.ToString();
             // 动态添加查询语句
             var builder = new StringBuilder();
-            builder.Append(SqlUtils.GetHeaderSql()); // 基础查询语句
-            builder.Append(SqlUtils.GetAccurateSql(typeCode, SqliteConst.ColumnType)); // 种类
-            builder.Append(SqlUtils.GetAccurateSql(campCode, SqliteConst.ColumnCamp)); // 阵营
-            builder.Append(SqlUtils.GetAccurateSql(rarityCode, SqliteConst.ColumnRarity)); // 罕贵
-            builder.Append(SqlUtils.GetAccurateSql(packCode, SqliteConst.ColumnPack)); // 卡包
-            builder.Append(SqlUtils.GetAccurateSql(CardQueryModel.Cv, SqliteConst.ColumnCv)); // 声优
-            builder.Append(SqlUtils.GetIntervalSql(CardQueryModel.Cost, SqliteConst.ColumnCost)); // 费用
-            builder.Append(SqlUtils.GetFooterSql()); // 排序
+            builder.Append(Utils.SqlUtils.GetHeaderSql()); // 基础查询语句
+            builder.Append(Utils.SqlUtils.GetAccurateSql(typeCode, SqliteConst.ColumnType)); // 种类
+            builder.Append(Utils.SqlUtils.GetAccurateSql(campCode, SqliteConst.ColumnCamp)); // 阵营
+            builder.Append(Utils.SqlUtils.GetAccurateSql(rarityCode, SqliteConst.ColumnRarity)); // 罕贵
+            builder.Append(Utils.SqlUtils.GetAccurateSql(packCode, SqliteConst.ColumnPack)); // 卡包
+            builder.Append(Utils.SqlUtils.GetAccurateSql(CardQueryModel.Cv, SqliteConst.ColumnCv)); // 声优
+            builder.Append(Utils.SqlUtils.GetIntervalSql(CardQueryModel.Cost, SqliteConst.ColumnCost)); // 费用
+            builder.Append(Utils.SqlUtils.GetFooterSql()); // 排序
             return builder.ToString(); // 完整的查询语句
         }
 

@@ -5,11 +5,12 @@ using System.Windows;
 using System.Windows.Forms;
 using Common;
 using Dialog;
+using ShadowVerse.Constant;
 using ShadowVerse.Model;
 using Wrapper;
 using Wrapper.Constant;
-using Wrapper.Utils;
 using ExcelHelper = ShadowVerse.Utils.ExcelHelper;
+using ShadowVerse.Utils;
 
 namespace ShadowVerse.View
 {
@@ -64,7 +65,7 @@ namespace ShadowVerse.View
         public static List<string> GetClearSqlList()
         {
             var dataSet = new DataSet();
-            DataManager.FillDataToDataSet(dataSet,SqlUtils.GetQueryAllSql());
+            DataManager.FillDataToDataSet(dataSet, Utils.SqlUtils.GetQueryAllSql());
 //            var idList = dataSet.Tables[SqliteConst.TableName].Rows.Cast<DataRow>()
 //                .Select(row => row[SqliteConst.ColumnId].ToString())
 //                .Where(id => id.EndsWith("1"))

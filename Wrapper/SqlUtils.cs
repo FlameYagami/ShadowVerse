@@ -1,50 +1,13 @@
-﻿using Wrapper.Constant;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Wrapper.Utils
+namespace Wrapper
 {
-    public class SqlUtils : SqliteConst
+    public class SqlUtils
     {
-        public static string GetQueryAllSql()
-        {
-            return $"SELECT * FROM {TableName} ORDER BY {ColumnId} ASC";
-        }
-
-        /// <summary>
-        ///     获取头部查询语句
-        /// </summary>
-        /// <returns></returns>
-        public static string GetHeaderSql()
-        {
-            return $"SELECT * FROM {TableName} WHERE 1=1";
-        }
-
-        /// <summary>
-        ///     获取尾部查询语句
-        /// </summary>
-        /// <returns></returns>
-        public static string GetFooterSql()
-        {
-            return GetOrderValueSql();
-        }
-
-        /// <summary>
-        ///     获取卡编排序方式查询语句
-        /// </summary>
-        /// <returns></returns>
-        private static string GetOrderNumberSql()
-        {
-            return $" ORDER BY {ColumnId} ASC";
-        }
-
-        /// <summary>
-        ///     获取数值排序方式查询语句
-        /// </summary>
-        /// <returns></returns>
-        private static string GetOrderValueSql()
-        {
-            return $" ORDER BY {ColumnCamp} DESC,{ColumnCost} DESC,{ColumnAtk} DESC,{ColumnLife} DESC,{ColumnName} DESC";
-        }
-
         /// <summary>
         ///     获取精确取值
         /// </summary>

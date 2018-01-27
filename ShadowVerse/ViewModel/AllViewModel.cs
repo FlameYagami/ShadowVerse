@@ -2,10 +2,9 @@
 using System.Data;
 using System.IO;
 using System.Windows;
-using ShadowVerse.Command;
-using ShadowVerse.Utils;
+using Common;
 using Wrapper;
-using Wrapper.Utils;
+using SqlUtils = ShadowVerse.Utils.SqlUtils;
 
 namespace ShadowVerse.ViewModel
 {

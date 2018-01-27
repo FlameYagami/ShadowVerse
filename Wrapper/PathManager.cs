@@ -13,6 +13,7 @@ namespace Wrapper
         public static string TexturesPath = RootPath + "textures\\";
         public static string BackgroundPath = TexturesPath + "Background.jpg";
 
+        // DeckEditor
         public static string AtkPath = $"{TexturesPath}ic_atk.png";
         public static string LifePath = $"{TexturesPath}ic_life.png";
         public static string Cost1Path = $"{TexturesPath}cost_1.png";
@@ -25,8 +26,10 @@ namespace Wrapper
         public static string Cost8Path = $"{TexturesPath}cost_1.png";
         public static string Cost9Path = $"{TexturesPath}cost_1.png";
         public static string Cost10Path = $"{TexturesPath}cost_1.png";
+        public static string DeckEditorDdPath = RootPath + "Data.db";
 
         // BahamutCardCrawler
         public static string Cg = $"{RootPath}CG\\";
+        public static string BahamutDdPath = RootPath + "Bahamut.db";
     }
 }
