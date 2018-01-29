@@ -53,7 +53,7 @@ namespace BahamutCardCrawler.View
             var image = sender as Image;
             if (null == image) return;
             var md5 = image.Tag.ToString();
-            ((CardPreviewVm)ContentView.DataContext).ShowImages(md5, true);
+            ((CardPreviewVm)ContentView.DataContext).ShowImages(md5, false);
         }
     }
 }

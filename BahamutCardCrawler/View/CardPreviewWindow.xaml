@@ -134,8 +134,11 @@
                     <DockPanel >
                         <materialDesign:Card DockPanel.Dock="Top">
                             <DockPanel>
-                                <Button Content="一键下载" Command="{Binding CmdDownloadImages}" DockPanel.Dock="Left"/>
-                                <TextBlock Text="{Binding PrgModel.PrgHint}" Visibility="{Binding PrgModel.PrgHintVisibility}" DockPanel.Dock="Right" Width="80" VerticalAlignment="Center" Margin="0 0 16 0"/>
+                                <StackPanel Orientation="Horizontal"  DockPanel.Dock="Left">
+                                    <Button Content="同步图标" Command="{Binding CmdSyncIcon}"/>
+                                    <Button Content="同步图鉴" Command="{Binding CmdDownloadImages}"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding PrgModel.PrgHint}" Visibility="{Binding PrgModel.PrgHintVisibility}" DockPanel.Dock="Right" Width="108" VerticalAlignment="Center" Margin="0 0 16 0"/>
                                 <ProgressBar Orientation="Horizontal" Value="{Binding PrgModel.PrgValue}" Visibility="{Binding PrgModel.PrgValueVisibility}" Margin="16 0"/>
                             </DockPanel>
                         </materialDesign:Card>

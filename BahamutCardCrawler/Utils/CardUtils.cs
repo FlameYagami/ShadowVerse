@@ -113,6 +113,13 @@ namespace BahamutCardCrawler.Utils
 //                .ToList();
         }
 
+        public static List<string> GetCardImagesUrl(string md5)
+        {
+            InitCardModels();
+            var imagesUrlJson = _cardModelsDic[md5].ImagesUrl;
+            return string.IsNullOrWhiteSpace(imagesUrlJson) ? new List<string>() : JsonUtils.Deserialize<List<string>>(imagesUrlJson);
+        }
+
         public static int GetRace(int cgKey)
         {
             return cgKey/10;

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using BahamutCardCrawler.Constant;
 using BahamutCardCrawler.Model;
 using BahamutCardCrawler.Utils;
@@ -33,12 +33,19 @@ namespace BahamutCardCrawler.ViewModel
         {
             CardModels = new ObservableCollection<CardModel>();
             CmdRare = new DelegateCommand {ExecuteCommand = Rarity_Click};
-            CmdDownloadImages = new DelegateCommand {ExecuteCommand = DownloadImages_Click };
+            CmdDownloadImages = new DelegateCommand {ExecuteCommand = DownloadImages_Click};
+            CmdSyncIcon = new DelegateCommand {ExecuteCommand = SyncIcon_Click };
             PrgModel = new PrgModel();
+        }
+
+        public void SyncIcon_Click(object obj)
+        {
+
         }
 
         public DelegateCommand CmdRare { get; set; }
         public DelegateCommand CmdDownloadImages { get; set; }
+        public DelegateCommand CmdSyncIcon { get; set; }
         public ObservableCollection<CardModel> CardModels { get; set; }
 
         /// <summary>
@@ -77,30 +84,29 @@ namespace BahamutCardCrawler.ViewModel
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <param name="isUpdate">是否需要从Web更新</param>
         public async void ShowImages(string md5, bool isUpdate)
         {
             var cardModel = CardUtils.GetCardModel(md5);
-            if (string.IsNullOrWhiteSpace(cardModel.ImagesUrl) || isUpdate)
+            await DialogHost.Show(new DialogProgress("数据读取中..."), (object s, DialogOpenedEventArgs e) =>
             {
-                await DialogHost.Show(new DialogProgress("数据读取中..."), (object s, DialogOpenedEventArgs e) =>
+                GetCardDetailUrls(cardModel, isUpdate).ObserveOnDispatcher().Subscribe(pair =>
                 {
-                    Task.Run(() =>
-                        {
-                            var imagesUrl = GetCardDetailUrls(cardModel.HrefUrl);
-                            SyncImagesData(imagesUrl, cardModel);
-                        })
-                        .ToObservable().ObserveOnDispatcher().Subscribe(result =>
-                        {
-                            e.Session.UpdateContent(new CardDetailDialog(md5));
-                            DownloadImages(cardModel);
-                        });
+                    // 满足条件之一则更新数据库：1、数据源是否来自Web 2、是否需要从Web更新
+                    if (pair.Value || isUpdate)
+                    {
+                        SyncImagesData(pair.Key, cardModel);
+                        DataManager.ReFillDataToDataSet(DataManager.DsAllCache, SqlExUtils.GetQueryAllSql(), DataManager.BahamutDbName);
+                        CardUtils.InitCardModels(true);
+                    }
+                    e.Session.UpdateContent(new CardDetailDialog(md5));
+                    DownloadImages(cardModel);
                 });
-            }
-            else
-            {
-                var vm = new CardDetailDialog(md5);
-                await DialogHost.Show(vm);
-            }
+            });
         }
 
         // 同步图标数据至数据库
@@ -118,13 +124,14 @@ namespace BahamutCardCrawler.ViewModel
         }
 
         // 同步图鉴数据至数据库
-        private static void SyncImagesData(ICollection<string> imagesUrl, CardModel cardModel)
+        private static void SyncImagesData(ICollection<string> imagesUrl, CardModel cardModel, bool isUpdateDb = true)
         {
             cardModel.ImagesUrl = JsonUtils.Serializer(imagesUrl);
             cardModel.ImagesStats = 0;
             var updateSql = SqlExUtils.GetUpateImagesSql(cardModel);
             var reuslt = DataManager.Execute(updateSql);
-            LogUtils.Write($"UpdateImages:{reuslt}");
+            if (!reuslt) LogUtils.Write($"UpdateImages:{updateSql}");
+            if (!isUpdateDb) return;
             DataManager.ReFillDataToDataSet(DataManager.DsAllCache, SqlExUtils.GetQueryAllSql(),
                 DataManager.BahamutDbName);
             CardUtils.InitCardModels(true);
@@ -145,32 +152,31 @@ namespace BahamutCardCrawler.ViewModel
         }
 
         // 下载图鉴
-        private void DownloadImages(CardModel cardModel)
+        private bool DownloadImages(CardModel cardModel)
         {
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(1000);
-                var imagesUrlDic =
-                    CardUtils.GetImagesDic(cardModel)
-                        .Where(pair => !File.Exists(pair.Value))
-                        .ToList();
-                foreach (var imagesUrlPair in imagesUrlDic)
-                    DownloadImage(imagesUrlPair.Key, imagesUrlPair.Value);
-            });
+            var result = true;
+            var imagesUrlDic =
+                CardUtils.GetImagesDic(cardModel)
+                    .Where(pair => !File.Exists(pair.Value))
+                    .ToList();
+            foreach (var imagesUrlPair in imagesUrlDic)
+                result = DownloadImage(imagesUrlPair.Key, imagesUrlPair.Value);
+            return result;
         }
 
-        public void DownloadImage(string url, string path)
+        public bool DownloadImage(string url, string path)
         {
             try
             {
                 var cln = new WebClient();
                 cln.DownloadFile(url, path);
-                LogUtils.Write($"DownloadImage Succeed:{url}");
             }
             catch (Exception e)
             {
                 LogUtils.Write($"DownloadImage Failed:{e.Message}");
+                return false;
             }
+            return true;
         }
 
         public void DownloadImages_Click(object obj)
@@ -180,40 +186,65 @@ namespace BahamutCardCrawler.ViewModel
                 BaseDialogUtils.ShowDialogAuto("请选择图鉴目录");
                 return;
             }
-            GetCardDetialUrls(CardModels.ToList());
+            DownloadImages(CardModels.ToList(), false);
         }
 
         /// <summary>
-        ///     获取所有卡牌模型下的卡图
+        /// 
         /// </summary>
         /// <param name="cardModels"></param>
-        /// <returns></returns>
-        public void GetCardDetialUrls(List<CardModel> cardModels)
+        /// <param name="isUpdate">是否需要从Web更新</param>
+        public void DownloadImages(List<CardModel> cardModels, bool isUpdate = false)
         {
             PrgModel.Start();
-            var imagesUrl = new List<string>();
             var taskDic = new Dictionary<int, bool>();
-
-            Parallel.For(0, cardModels.Count, i =>
+            var sqls = new List<string>();
+            for (var i = 0; i != cardModels.Count; i++)
             {
                 var page = Convert.ToInt32(i);
                 taskDic.Add(page, false);
-                GetCardDetailUrls(cardModels[page]).ObserveOnDispatcher().Subscribe(urls =>
+                GetCardDetailUrls(cardModels[page], isUpdate).Select(pair =>
                 {
-                    imagesUrl.AddRange(CardUtils.GetImagesDic(cardModels[page], urls)
-                            .Where(pair => !File.Exists(pair.Value))
-                            .Select(pair => pair.Value)
-                            .ToList());
+                    // 数据模型填充
+                    cardModels[page].ImagesUrl = JsonUtils.Serializer(pair.Key);
+                    cardModels[page].ImagesStats = 0;
+                    // 满足条件之一则更新数据库：1、数据源是否来自Web 2、是否需要从Web更新
+                    if (pair.Value || isUpdate)
+                    {
+                        // 获取更新数据库的语句
+                        var updateSql = SqlExUtils.GetUpateImagesSql(cardModels[page]);
+                        sqls.Add(updateSql);
+                    }
+                    // 下载图鉴
+                    DownloadImages(cardModels[page]);
+                    return pair.Key;
+                }).ObserveOnDispatcher().Subscribe(urls =>
+                {
+                    // UI更新状态      
                     taskDic[page] = true;
                     var persent = taskDic.Values.Count(x => x)/float.Parse(cardModels.Count.ToString());
                     PrgModel.Update(Convert.ToInt32(persent*100),
-                        $"解析中：{taskDic.Values.Count(x => x)} / {cardModels.Count}");
+                        $"已完成：{taskDic.Values.Count(x => x)} / {cardModels.Count}");
                 });
-            });
+            }
+            // 轮询任务字典，确保整个任务执行完毕，将数据提交至观测者
             _dispose = Observable.Interval(TimeSpan.FromSeconds(1)).ObserveOnDispatcher().Subscribe(time =>
             {
-                if (cardModels.Count != taskDic.Values.Count(flag => flag)) return;
+                if (cardModels.Count != taskDic.Values.Count(x => x))
+                {
+                    if (sqls.Count <= 20) return;
+                    DataManager.Execute(sqls.GetRange(0, 20));
+                    sqls.RemoveRange(0, 20);
+                    return;
+                }
                 _dispose.Dispose();
+                PrgModel.Finish();
+
+                DataManager.Execute(sqls.GetRange(0, sqls.Count));
+                sqls.RemoveRange(0, sqls.Count);
+                DataManager.ReFillDataToDataSet(DataManager.DsAllCache, SqlExUtils.GetQueryAllSql(),
+                    DataManager.BahamutDbName);
+                CardUtils.InitCardModels(true);
             });
         }
 
@@ -260,10 +291,21 @@ namespace BahamutCardCrawler.ViewModel
         ///     获取一个链接下的图鉴集合
         /// </summary>
         /// <param name="cardModel"></param>
+        /// <param name="isUpdate">是否需要从Web更新</param>
         /// <returns></returns>
-        private IObservable<List<string>> GetCardDetailUrls(CardModel cardModel)
+        private IObservable<KeyValuePair<List<string>, bool>> GetCardDetailUrls(CardModel cardModel, bool isUpdate = false)
         {
-            return Task.Run(() => GetCardDetailUrls(cardModel.HrefUrl)).ToObservable();
+            return Task.Run(() =>
+                {
+                    var dbImagesUrl = CardUtils.GetCardImagesUrl(cardModel.Md5);
+                    var webImagesUrl = GetCardDetailUrls(cardModel.HrefUrl);
+                    if (0 == dbImagesUrl.Count || isUpdate)
+                    {
+                        return new KeyValuePair<List<string>, bool>(webImagesUrl, true);
+                    }
+                    return new KeyValuePair<List<string>, bool>(dbImagesUrl,false);
+                }
+            ).ToObservable();
         }
 
         /// <summary>

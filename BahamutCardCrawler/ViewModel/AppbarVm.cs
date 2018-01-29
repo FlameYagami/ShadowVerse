@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using BahamutCardCrawler.Model;
 using Common;
 
-namespace BahamutCardCrawler.Model
+namespace BahamutCardCrawler.ViewModel
 {
     public class AppbarVm
     {
