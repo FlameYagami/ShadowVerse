@@ -44,7 +44,7 @@ namespace ShadowVerse.ViewModel
             var dataSet = new DataSet();
             DataManager.FillDataToDataSet(dataSet, sql);
             var previewList = GetCardPreviewList(dataSet);
-            ((DeckEditorWindow) AllViewModel.Window).GvCardPreview.DataContext = new CardPreviewViewModel(previewList);
+            ((DeckEditorWindow) AppbarVm.Window).GvCardPreview.DataContext = new CardPreviewViewModel(previewList);
         }
 
         public void Reset_Click(object obj)

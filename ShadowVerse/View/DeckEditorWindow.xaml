@@ -4,223 +4,97 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:charts="clr-namespace:Visifire.Charts;assembly=WPFVisifire.Charts"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Icon="../icon.ico"
-        Title="ShadowVerse DeckEditor" Height="630" Width="1060" Loaded="Window_Loaded"
+        Title="ShadowVerse DeckEditor" Height="680" Width="1080" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
         Style="{DynamicResource BaseWindow}">
-    <Border Style="{DynamicResource BorderWindow}" Name="BorderView" Background="#1A1A1A">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Border Style="{DynamicResource BorderTitle}" Name="GridTitle" Height="30" ToolTip="右键最小化"
-                    MouseRightButtonDown="Title_MouseRightButtonDown" MouseMove="Title_MouseMove">
-                <Label Content="ShadowVerse DeckEditor" Style="{DynamicResource LblCenter}" Foreground="White"
-                       FontSize="16" />
-            </Border>
-            <Grid Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="230" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="220" />
-                </Grid.ColumnDefinitions>
-                <Grid Name="GvCardDetail">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="280" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Border Margin="10" Background="{Binding CardDetailModel.BgRarity}">
-                        <Image Source="{Binding CardDetailModel.ImageCurrentPath}" Height="250" Width="200">
-                            <Image.InputBindings>
-                                <MouseBinding MouseAction="RightClick" Command="{Binding CmdImageChange}" />
-                            </Image.InputBindings>
-                        </Image>
-                    </Border>
-                    <Border Style="{DynamicResource ControlBorder}" Grid.Row="1" Margin="10,0,10,10">
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="25" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
+    <materialDesign:DialogHost Identifier="">
+        <DockPanel Background="Wheat">
+            <materialDesign:ColorZone DockPanel.Dock="Top" Padding="16" Name="AppbarView"
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="Accent"
+                                      MouseRightButtonDown="Title_MouseRightButtonDown"
+                                      MouseMove="Title_MouseMove">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                Command="{Binding CmdMinimize}" Margin="8 0">
+                            <materialDesign:PackIcon Kind="WindowMinimize" />
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{Binding CmdExit}"
+                                Margin="8 0">
+                            <materialDesign:PackIcon Kind="Close" />
+                        </Button>
+                    </StackPanel>
+                    <Label Content="Shadowverse DeckEditor" FontSize="20" Foreground="White"
+                           VerticalContentAlignment="Center" />
+                </DockPanel>
+            </materialDesign:ColorZone>
+            <DockPanel>
+                <DockPanel Name="GvCardDetail" DockPanel.Dock="Left">
+                    <materialDesign:Card Margin="8" DockPanel.Dock="Top">
+                        <Grid Background="{Binding CardDetailModel.BgRarity}" >
+                            <Image Source="{Binding CardDetailModel.ImageCurrentPath}" Height="250" Width="200" Margin="4">
+                                <Image.InputBindings>
+                                    <MouseBinding MouseAction="RightClick" Command="{Binding CmdImageChange}" />
+                                </Image.InputBindings>
+                            </Image>
+                        </Grid>
+                    </materialDesign:Card>
+                    <DockPanel Margin="16">
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
                             <DockPanel>
                                 <Image DockPanel.Dock="Left" Width="25" Height="25"
                                        Source="{Binding CardDetailModel.ImageCostPath}" />
-                                <Label Content="{Binding CardDetailModel.Name}" FontSize="16" Margin="10,0,0,0"/>
+                                <Label Content="{Binding CardDetailModel.Name}" FontSize="16" Margin="16 0 0 0"/>
                             </DockPanel>
-
-                            <Grid Grid.Row="1">
-                                <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True">
-                                    <Label Content="{Binding CardDetailModel.Camp}" HorizontalContentAlignment="Center"/>
-                                    <Label Content="{Binding CardDetailModel.Pack}" HorizontalContentAlignment="Center"/>
-                                    <Label Content="{Binding CardDetailModel.Cv}" HorizontalContentAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True">
+                                <Label Content="{Binding CardDetailModel.Camp}" HorizontalContentAlignment="Center"/>
+                                <Label Content="{Binding CardDetailModel.Pack}" HorizontalContentAlignment="Center"/>
+                                <Label Content="{Binding CardDetailModel.Cv}" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ScrollViewer.Content>
+                                <StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Orientation="Horizontal" Height="30">
+                                        <Label Content="{Binding CardDetailModel.EvoDescriptionList[0]}" FontSize="16" />
+                                        <Grid>
+                                            <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
+                                            <Label Content="{Binding CardDetailModel.Atk}" Margin="4" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <Grid>
+                                            <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
+                                            <Label Content="{Binding CardDetailModel.Life}" Margin="4" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </StackPanel>
+                                    <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.SkillList[0]}" Margin="0,5,0,0"/>
+                                    <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[0]}" Margin="0,5,0,0" FontSize="12"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
+                                        <Label Content="{Binding CardDetailModel.EvoDescriptionList[1]}" FontSize="16" />
+                                        <Grid>
+                                            <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
+                                            <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="4" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                        <Grid>
+                                            <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
+                                            <Label Content="{Binding CardDetailModel.EvoLife}" Margin="4" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </StackPanel>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.SkillList[1]}" Margin="0 8 0 0"/>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.FlavourList[1]}" Margin="0 8 0 0" FontSize="12"/>
                                 </StackPanel>
-                            </Grid>
-                            
-                            <ScrollViewer  Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                                <ScrollViewer.Content>
-                                    <StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <StackPanel Orientation="Horizontal" Height="30">
-                                            <Label Content="{Binding CardDetailModel.EvoDescriptionList[0]}" FontSize="16" />
-                                            <Grid>
-                                                <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
-                                                <Label Content="{Binding CardDetailModel.Atk}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
-                                            </Grid>
-                                            <Grid>
-                                                <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
-                                                <Label Content="{Binding CardDetailModel.Life}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
-                                            </Grid>
-                                        </StackPanel>
-                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.SkillList[0]}" Margin="0,5,0,0"/>
-                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[0]}" Margin="0,5,0,0" FontSize="12"/>
-                                        <StackPanel Orientation="Horizontal" Height="30" Margin="0,5,0,0">
-                                            <Label Content="{Binding CardDetailModel.EvoDescriptionList[1]}" FontSize="16" />
-                                            <Grid>
-                                                <Image Source="{Binding CardDetailModel.ImageAtkPath}"/>
-                                                <Label Content="{Binding CardDetailModel.EvoAtk}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
-                                            </Grid>
-                                            <Grid>
-                                                <Image Source="{Binding CardDetailModel.ImageLifePath}"/>
-                                                <Label Content="{Binding CardDetailModel.EvoLife}" Margin="5" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
-                                            </Grid>
-                                        </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" Text="{Binding CardDetailModel.SkillList[1]}" Margin="0,5,0,0"/>
-                                        <TextBlock TextWrapping="Wrap"  Text="{Binding CardDetailModel.FlavourList[1]}" Margin="0,5,0,0" FontSize="12"/>
-                                    </StackPanel>
-                                </ScrollViewer.Content>
-                            </ScrollViewer>
-                        </Grid>
-                    </Border>
-                </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="110" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <DockPanel>
-                        <Button DockPanel.Dock="Left" Command="{Binding CmdExit}" Content="退出" Margin="10,10,10,0"
-                                Width="60" />
-                        <Border Style="{DynamicResource ControlBorder}" Margin="0, 10 ,10 ,0">
-                            <Grid Name="GridQuery" VerticalAlignment="Center" Height="90">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="30" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="45" />
-                                    <ColumnDefinition Width="1.75*" />
-                                    <ColumnDefinition Width="45" />
-                                    <ColumnDefinition Width="2.5*" />
-                                    <ColumnDefinition Width="80" />
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Grid.Row="0" Style="{DynamicResource LblCenter}" Content="种类" />
-                                <Label Grid.Column="0" Grid.Row="1" Style="{DynamicResource LblCenter}" Content="职业" />
-                                <Label Grid.Column="0" Grid.Row="2" Style="{DynamicResource LblCenter}" Content="罕贵" />
-                                <ComboBox Grid.Column="1" Grid.Row="0" Text="{Binding CardQueryModel.Type}"
-                                          ItemsSource="{Binding TypeList}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="1" Grid.Row="1" Text="{Binding CardQueryModel.Camp}"
-                                          ItemsSource="{Binding CampList}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="1" Grid.Row="2" Text="{Binding CardQueryModel.Rarity}"
-                                          ItemsSource="{Binding RarityList}" SelectedIndex="0" />
-                                <Label Grid.Column="2" Grid.Row="1" Style="{DynamicResource LblCenter}" Content="声优" />
-                                <Label Grid.Column="2" Grid.Row="0" Style="{DynamicResource LblCenter}" Content="卡包" />
-                                <Label Grid.Column="2" Grid.Row="2" Style="{DynamicResource LblCenter}" Content="费用" />
-                                <ComboBox Grid.Column="3" Grid.Row="1" ItemsSource="{Binding CvList}"
-                                          Text="{Binding CardQueryModel.Cv}" SelectedIndex="0" IsEditable="False" />
-                                <ComboBox Grid.Column="3" Grid.Row="0" Text="{Binding CardQueryModel.Pack}"
-                                          ItemsSource="{Binding PackList}" SelectedIndex="0" IsEditable="False" />
-                                <TextBox Text="{Binding CardQueryModel.Cost}" Grid.Column="3" Grid.Row="2"
-                                         ToolTip="区间以连接号分开（A-B）" />
-                                <Button Name="BtnQuery" Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Margin="5"
-                                        Command="{Binding CmdQuery}"
-                                        Content="检索" IsDefault="True" />
-                                <Button Name="BtnReset" Grid.Column="4" Grid.Row="2" Command="{Binding CmdReset}"
-                                        Content="重置" />
-                            </Grid>
-                        </Border>
+                            </ScrollViewer.Content>
+                        </ScrollViewer>
                     </DockPanel>
-
-                    <Grid Grid.Row="1" Margin="0,10,0,10" Name="GvDeck">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="160" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid Height="30" Width="600">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Command="{Binding CmdDeckClear}" Content="清空" />
-                            <Button Grid.Column="1" Command="{Binding CmdDeckDelete}" Content="删除" />
-                            <ComboBox Grid.Column="2" DropDownClosed="CmbDeck_DropDownClosed"
-                                      DropDownOpened="CmbDeck_DropDownOpened" Text="{Binding DeckName}"
-                                      ItemsSource="{Binding DeckNameList}" />
-                            <Button Grid.Column="3" Command="{Binding CmdDeckSave}" Content="保存" />
-                            <Button Grid.Column="4" Command="{Binding CmdDeckResave}" Content="另存" />
-                        </Grid>
-                        <Border Grid.Row="1" Style="{DynamicResource ControlBorder}" Width="590" Margin="0,10">
-                            <DockPanel>
-                                <Grid Width="50" DockPanel.Dock="Right" Margin="5,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="从者:" />
-                                        <Label Content="{Binding FollowerCount}" Foreground="Blue" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <Label Content="咒术:" />
-                                        <Label Content="{Binding AmuletCount}" Foreground="Blue" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <Label Content="护符:" />
-                                        <Label Content="{Binding SpellCount}" Foreground="Blue" />
-                                    </StackPanel>
-                                </Grid>
-                                <charts:Chart Name="ChartDeck" Style="{DynamicResource ControlTransparent}"
-                                              ScrollingEnabled="False" View3D="True" />
-                            </DockPanel>
-                        </Border>
-                        <Border Grid.Row="2" Style="{DynamicResource ControlBorder}" Height="270" Width="590"
-                                VerticalAlignment="Bottom">
-                            <ListView Name="LvDeck"
-                                      ItemsSource="{Binding DeckList}"
-                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                      Style="{DynamicResource ControlTransparent}"
-                                      ItemsPanel="{DynamicResource ListViewItemPanel}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding ImagePath}" Tag="{Binding Id}" Width="48" Height="60"
-                                               MouseRightButtonDown="LvDeckItem_MouseRightButtonDown"
-                                               MouseLeftButtonDown="LvDeckItem_MouseLeftButtonDown"
-                                               ToolTip="双击添加&#x0a;右键删除" />
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Border>
-                    </Grid>
-                </Grid>
-                <Grid Grid.Column="2" Name="GvCardPreview">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Border Style="{DynamicResource ControlBorder}" Margin="10,0,10,0" Height="30">
-                        <Label Content="{Binding CardPreviewCount}" Width="110" Height="20" />
-                    </Border>
-                    <Border Style="{DynamicResource ControlBorder}" Grid.Row="1" Margin="10,0,10,10">
+                </DockPanel>
+                <DockPanel Name="GvCardPreview" DockPanel.Dock="Right" Width="240">
+                    <materialDesign:Card DockPanel.Dock="Top" Margin="8" Height="64">
+                        <Label Content="{Binding CardPreviewCount}" />
+                    </materialDesign:Card>
+                    <materialDesign:Card Height="524" Margin="8 0 8 8">
                         <ListView x:Name="LvPreview" SelectionChanged="CardPreview_SelectionChanged"
-                                  Style="{DynamicResource ControlTransparent}"
                                   ItemsSource="{Binding CardPreviewList}"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -248,9 +122,104 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </Border>
-                </Grid>
-            </Grid>
-        </Grid>
-    </Border>
+                    </materialDesign:Card>
+                </DockPanel>
+                <DockPanel>
+                    <materialDesign:Card Margin="0 8 0 0" DockPanel.Dock="Top">
+                        <Grid Name="GridQuery">
+                            <Grid.RowDefinitions>
+                                <RowDefinition  />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Grid.Row="0" Text="{Binding CardQueryModel.Type}"
+                                          ItemsSource="{Binding TypeList}" SelectedIndex="0" IsEditable="True" materialDesign:HintAssist.Hint="种类"/>
+                            <ComboBox Grid.Column="0" Grid.Row="1" Text="{Binding CardQueryModel.Camp}"
+                                          ItemsSource="{Binding CampList}" SelectedIndex="0" IsEditable="True" materialDesign:HintAssist.Hint="职业"/>
+                            <ComboBox Grid.Column="0" Grid.Row="2" Text="{Binding CardQueryModel.Rarity}"
+                                          ItemsSource="{Binding RarityList}" SelectedIndex="0" materialDesign:HintAssist.Hint="罕贵"/>
+                            <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding CvList}"
+                                          Text="{Binding CardQueryModel.Cv}" SelectedIndex="0" IsEditable="True" materialDesign:HintAssist.Hint="声优"/>
+                            <ComboBox Grid.Column="1" Grid.Row="0" Text="{Binding CardQueryModel.Pack}"
+                                          ItemsSource="{Binding PackList}" SelectedIndex="0" IsEditable="True" materialDesign:HintAssist.Hint="卡包"/>
+                            <TextBox  Grid.Column="1" Grid.Row="2" Text="{Binding CardQueryModel.Cost}"
+                                         ToolTip="区间以连接号分开（A-B）" materialDesign:HintAssist.Hint="费用"/>
+                            <Button Name="BtnQuery" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Margin="5"
+                                        Command="{Binding CmdQuery}" Height="64"
+                                        Content="检索" IsDefault="True" />
+                            <Button Name="BtnReset" Grid.Column="2" Grid.Row="2" Command="{Binding CmdReset}"
+                                        Content="重置" />
+                        </Grid>
+                    </materialDesign:Card>
+                    <DockPanel Name="GvDeck">
+                        <materialDesign:Card Margin="0 8 0 0" DockPanel.Dock="Top">
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Command="{Binding CmdDeckClear}" Content="清空" />
+                                <Button Grid.Column="1" Command="{Binding CmdDeckDelete}" Content="删除" />
+                                <ComboBox Grid.Column="2" DropDownClosed="CmbDeck_DropDownClosed"
+                                      DropDownOpened="CmbDeck_DropDownOpened" Text="{Binding DeckName}"
+                                      ItemsSource="{Binding DeckNameList}" />
+                                <Button Grid.Column="3" Command="{Binding CmdDeckSave}" Content="保存" />
+                                <Button Grid.Column="4" Command="{Binding CmdDeckResave}" Content="另存" />
+                            </Grid>
+                        </materialDesign:Card>
+                        <materialDesign:Card DockPanel.Dock="Bottom" Height="270" Width="590" Margin="0 8 0 8">
+                            <ListView Name="LvDeck"
+                                      ItemsSource="{Binding DeckList}"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      Style="{DynamicResource ControlTransparent}"
+                                      ItemsPanel="{DynamicResource ListViewItemPanel}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding ImagePath}" Tag="{Binding Id}" Width="48" Height="60"
+                                               MouseRightButtonDown="LvDeckItem_MouseRightButtonDown"
+                                               MouseLeftButtonDown="LvDeckItem_MouseLeftButtonDown"
+                                               ToolTip="双击添加&#x0a;右键删除" />
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </materialDesign:Card>
+                        <materialDesign:Card Margin="0 8 0 0">
+                            <DockPanel>
+                                <Grid Width="64" DockPanel.Dock="Right">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="从者:" />
+                                        <Label Content="{Binding FollowerCount}" Foreground="Blue" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                        <Label Content="咒术:" />
+                                        <Label Content="{Binding AmuletCount}" Foreground="Blue" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Label Content="护符:" />
+                                        <Label Content="{Binding SpellCount}" Foreground="Blue" />
+                                    </StackPanel>
+                                </Grid>
+                                <charts:Chart Name="ChartDeck" Style="{DynamicResource ControlTransparent}"
+                                              ScrollingEnabled="False" View3D="True" Height="100"/>
+                            </DockPanel>
+                        </materialDesign:Card>
+                    </DockPanel>
+                </DockPanel>
+            </DockPanel>
+        </DockPanel>
+    </materialDesign:DialogHost>
 </Window>

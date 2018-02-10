@@ -152,7 +152,7 @@
                                     <StackPanel Orientation="Vertical">
                                         <Image Width="96" Height="96" Tag="{Binding Md5}"
                                            MouseDown="UIElement_OnMouseDown"
-                                           Source="{Binding Md5, Converter={StaticResource IconPathConverter}}" />
+                                           Source="{Binding Icon}" />
                                         <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" Width="96" />
                                     </StackPanel>
                                 </DataTemplate>

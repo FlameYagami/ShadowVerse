@@ -13,7 +13,7 @@ namespace ShadowVerse.Utils
     {
         public static CardModel GetCardModel(int id)
         {
-            var row = AllViewModel.DsAllCache.Tables[TableName].Rows
+            var row = DataManager.DsAllCache.Tables[TableName].Rows
                 .Cast<DataRow>()
                 .AsParallel()
                 .First(column => int.Parse(column[ColumnId].ToString()) == id);
@@ -82,7 +82,7 @@ namespace ShadowVerse.Utils
         public static List<string> GetCvList()
         {
             var packlist = new List<string> {StringConst.NotApplicable};
-            var tempList = AllViewModel.DsAllCache.Tables[TableName].AsEnumerable().AsParallel()
+            var tempList = DataManager.DsAllCache.Tables[TableName].AsEnumerable().AsParallel()
                 .Select(column => column[ColumnCv].ToString())
                 .Distinct()
                 .OrderBy(value => value.ToString().Length)
@@ -119,7 +119,7 @@ namespace ShadowVerse.Utils
         /// <returns>卡名</returns>
         public static string GetName(int id)
         {
-            var row = AllViewModel.DsAllCache.Tables[TableName].Rows.Cast<DataRow>().AsParallel()
+            var row = DataManager.DsAllCache.Tables[TableName].Rows.Cast<DataRow>().AsParallel()
                 .First(tempRow => int.Parse(tempRow[ColumnId].ToString()).Equals(id));
             return row[ColumnName].ToString();
         }

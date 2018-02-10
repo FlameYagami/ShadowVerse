@@ -199,7 +199,7 @@ namespace ShadowVerse.ViewModel
 
         public void CreateChartColumn()
         {
-            var chartDeck = ((DeckEditorWindow) AllViewModel.Window).ChartDeck;
+            var chartDeck = ((DeckEditorWindow)AppbarVm.Window).ChartDeck;
 
             // 创建一个新的数据线。               
             var dataSeries = new DataSeries
@@ -229,7 +229,7 @@ namespace ShadowVerse.ViewModel
 
         public void UpdateChartColumn(Dictionary<int, int> statisticsDic)
         {
-            var chartDeck = ((DeckEditorWindow) AllViewModel.Window).ChartDeck;
+            var chartDeck = ((DeckEditorWindow)AppbarVm.Window).ChartDeck;
             // 创建一个新的数据线。               
             var dataSeries = new DataSeries
             {

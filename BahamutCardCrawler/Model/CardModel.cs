@@ -11,5 +11,7 @@
         public int ImagesStats { get; set; }
         public int Race { get; set; }
         public int Rarity { get; set; }
+
+        public string Icon { get; set; }
     }
 }

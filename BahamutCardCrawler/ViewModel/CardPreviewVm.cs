@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -68,8 +69,15 @@ namespace BahamutCardCrawler.ViewModel
                     // 从数据库中取出图鉴列表
                     var cardModels = CardUtils.GetCardModels(cgKey);
                     // 非手动刷新,直接调用本地缓存
-                    if ((0 != cardModels.Count) && !isUpdate)
+                    if (0 != cardModels.Count && !isUpdate)
+                    {
+                        cardModels.ForEach(model =>
+                        {
+                            var iconPath = CardUtils.GetIconPath(model);
+                            model.Icon = File.Exists(iconPath) ? iconPath : model.IconUrl;
+                        });
                         return cardModels;
+                    }
                     // 首次默认爬取网页数据
                     var webModels = GetCardPreviewModels(url, cgKey);
                     SyncIconData(cardModels.Select(model => model.Md5).ToList(), webModels);
@@ -91,9 +99,9 @@ namespace BahamutCardCrawler.ViewModel
         /// <param name="isUpdate">是否需要从Web更新</param>
         public async void ShowImages(string md5, bool isUpdate)
         {
-            var cardModel = CardUtils.GetCardModel(md5);
             await DialogHost.Show(new DialogProgress("数据读取中..."), (object s, DialogOpenedEventArgs e) =>
             {
+                var cardModel = CardUtils.GetCardModel(md5);
                 GetCardDetailUrls(cardModel, isUpdate).ObserveOnDispatcher().Subscribe(pair =>
                 {
                     // 满足条件之一则更新数据库：1、数据源是否来自Web 2、是否需要从Web更新

@@ -13,7 +13,7 @@ namespace BahamutCardCrawler.Converter
             var md5 = value?.ToString();
             var cardModel = CardUtils.GetCardModel(md5);
             var iconUrl = cardModel.IconUrl;
-            var iconPath = CardUtils.GetIconPath(cardModel.Race, cardModel.Rarity, cardModel.Name);
+            var iconPath = CardUtils.GetIconPath(cardModel);
             return File.Exists(iconPath) ? iconPath : iconUrl;
         }
 

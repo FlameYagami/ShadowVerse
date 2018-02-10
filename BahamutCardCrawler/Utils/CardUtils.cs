@@ -67,22 +67,6 @@ namespace BahamutCardCrawler.Utils
         {
             InitCardModels();
             return _cardModelsDic[md5];
-//            var row = DataManager.DsAllCache.Tables[DataManager.BahamutDbName].Rows.Cast<DataRow>()
-//                .AsParallel()
-//                .FirstOrDefault(column => column[ColumnMd5].ToString().Equals(md5));
-//            if (null == row) return null;
-//            return new CardModel
-//            {
-//                Md5 = row[ColumnMd5].ToString(),
-//                Name = row[ColumnName].ToString(),
-//                IconUrl = row[ColumnIocnUrl].ToString(),
-//                IconStats = int.Parse(row[ColumnIocnStats].ToString()),
-//                HrefUrl = row[ColumnHrefUrl].ToString(),
-//                ImagesUrl = row[ColumnImagesUrl].ToString(),
-//                ImagesStats = int.Parse(row[ColumnImagesStats].ToString()),
-//                Race = int.Parse(row[ColumnRace].ToString()),
-//                Rarity = int.Parse(row[ColumnRarity].ToString())
-//            };
         }
 
         public static List<CardModel> GetCardModels(int cgKey)
@@ -92,25 +76,6 @@ namespace BahamutCardCrawler.Utils
             InitCardModels();
             return
                 _cardModelsDic.Values.ToList().Where(model => (model.Race == race) && (model.Rarity == rarity)).ToList();
-//            return DataManager.DsAllCache.Tables[DataManager.BahamutDbName].Rows.Cast<DataRow>()
-//                .AsParallel()
-//                .Where(
-//                    column =>
-//                        (int.Parse(column[ColumnRace].ToString()) == race) &&
-//                        (int.Parse(column[ColumnRarity].ToString()) == rarity))
-//                .Select(column => new CardModel
-//                {
-//                    Md5 = column[ColumnMd5].ToString(),
-//                    Name = column[ColumnName].ToString(),
-//                    IconUrl = column[ColumnIocnUrl].ToString(),
-//                    IconStats = int.Parse(column[ColumnIocnStats].ToString()),
-//                    HrefUrl = column[ColumnHrefUrl].ToString(),
-//                    ImagesUrl = column[ColumnImagesUrl].ToString(),
-//                    ImagesStats = int.Parse(column[ColumnImagesStats].ToString()),
-//                    Race = int.Parse(column[ColumnRace].ToString()),
-//                    Rarity = int.Parse(column[ColumnRarity].ToString())
-//                })
-//                .ToList();
         }
 
         public static List<string> GetCardImagesUrl(string md5)
@@ -128,11 +93,6 @@ namespace BahamutCardCrawler.Utils
         public static int GetRarity(int cgKey)
         {
             return cgKey%10;
-        }
-
-        public static string GetIconPath(int race, int rarity, string name)
-        {
-            return $"{PathManager.Cg}{Dic.RaceDic[race]}\\{Dic.RarityDic[rarity]}\\Icon\\{name}.jpg";
         }
 
         public static string GetIconPath(CardModel cardModel)

@@ -105,8 +105,8 @@
     <Compile Include="Converter\ImagePathConverter.cs" />
     <Compile Include="Converter\IconPathConverter.cs" />
     <Compile Include="Model\AppbarModel.cs" />
-    <Compile Include="ViewModel\AppbarVm.cs" />
     <Compile Include="Model\CardDetailModel.cs" />
+    <Compile Include="ViewModel\AppbarVm.cs" />
     <Compile Include="Model\PrgModel.cs" />
     <Compile Include="Utils\CardUtils.cs" />
     <Compile Include="Constant\Dic.cs" />

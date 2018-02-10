@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Dialog;
 using ShadowVerse.Model;
 using ShadowVerse.ViewModel;
+using Wrapper;
+using SqlUtils = ShadowVerse.Utils.SqlUtils;
 
 namespace ShadowVerse.View
 {
@@ -16,7 +20,7 @@ namespace ShadowVerse.View
         public DeckEditorWindow()
         {
             InitializeComponent();
-            DataContext = new AllViewModel(this);
+            AppbarView.DataContext = new AppbarVm(this);
             GvDeck.DataContext = new DeckViewModel();
             GridQuery.DataContext = new CardQueryModelView();
             GvCardDetail.DataContext = new CardDetailViewModle();
@@ -24,7 +28,15 @@ namespace ShadowVerse.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            if (DataManager.FillDataToDataSet(DataManager.DsAllCache, SqlUtils.GetQueryAllSql()))
+            {
+                if (!Directory.Exists(PathManager.DeckFolderPath))
+                    Directory.CreateDirectory(PathManager.DeckFolderPath);
+            }
+            else
+            {
+                BaseDialogUtils.ShowDialogOk("数据库初始化失败");
+            }
         }
 
         private void Title_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
